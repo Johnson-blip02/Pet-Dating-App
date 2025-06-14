@@ -1,0 +1,65 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\cat1.jpg",
+      "PackagePath": "staticwebassets\\images\\cat1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\cat2.jpg",
+      "PackagePath": "staticwebassets\\images\\cat2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\cat3.jpg",
+      "PackagePath": "staticwebassets\\images\\cat3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\cat4.jpg",
+      "PackagePath": "staticwebassets\\images\\cat4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\cat5.jpg",
+      "PackagePath": "staticwebassets\\images\\cat5.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\dog1.jpg",
+      "PackagePath": "staticwebassets\\images\\dog1.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\dog2.jpg",
+      "PackagePath": "staticwebassets\\images\\dog2.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\dog3.jpg",
+      "PackagePath": "staticwebassets\\images\\dog3.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\dog4.jpg",
+      "PackagePath": "staticwebassets\\images\\dog4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\dog5.jpg",
+      "PackagePath": "staticwebassets\\images\\dog5.jpg"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.backend.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssetEndpoints.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.backend.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.build.backend.props",
+      "PackagePath": "build\\backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildMultiTargeting.backend.props",
+      "PackagePath": "buildMultiTargeting\\backend.props"
+    },
+    {
+      "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.buildTransitive.backend.props",
+      "PackagePath": "buildTransitive\\backend.props"
+    }
+  ],
+  "ElementsToRemove": []
+}
