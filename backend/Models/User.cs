@@ -10,7 +10,7 @@ namespace backend.Models
         [BsonRepresentation(BsonType.ObjectId)]
         public string? Id { get; set; }
 
-        [BsonElement("username")]
+        [BsonElement("userName")]
         [Required(ErrorMessage = "Username is required")]
         [StringLength(50, MinimumLength = 2)]
         public string UserName { get; set; } = string.Empty;
@@ -26,12 +26,15 @@ namespace backend.Models
         [BsonElement("petPreferences")]
         public List<string> PetPreferences { get; set; } = new();
 
-        [BsonElement("photoUrl")]
+        [BsonElement("photoPath")]
         [Required]
         public string PhotoPath { get; set; } = string.Empty;
 
         [BsonElement("location")]
         [Required(ErrorMessage = "Location is required")]
         public string Location { get; set; } = string.Empty;
+
+        [BsonElement("role")]
+        public string Role { get; set; } = "User";
     }
 }
