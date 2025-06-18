@@ -1,6 +1,8 @@
 using backend.Models;
 using backend.Services;
 using Microsoft.AspNetCore.Mvc;
+using MongoDB.Driver;
+
 
 namespace backend.Controllers
 {
@@ -15,8 +17,40 @@ namespace backend.Controllers
             _userService = userService;
         }
 
-        [HttpGet]
-        public ActionResult<List<User>> Get() => _userService.Get();
+    [HttpGet]
+    public ActionResult<List<User>> GetFilteredUsers(
+        [FromQuery] string? petType,
+        [FromQuery] int? minAge,
+        [FromQuery] int? maxAge,
+        [FromQuery] string? location,
+        [FromQuery] int page = 1,
+        [FromQuery] int limit = 10)
+    {
+        var filter = Builders<User>.Filter.Empty;
+
+        if (!string.IsNullOrEmpty(petType))
+            filter &= Builders<User>.Filter.Eq(u => u.PetType, petType);
+
+        if (!string.IsNullOrEmpty(location))
+            filter &= Builders<User>.Filter.Eq(u => u.Location, location);
+
+        if (minAge.HasValue)
+            filter &= Builders<User>.Filter.Gte(u => u.Age, minAge.Value);
+
+        if (maxAge.HasValue)
+            filter &= Builders<User>.Filter.Lte(u => u.Age, maxAge.Value);
+
+        var skip = (page - 1) * limit;
+
+        var users = _userService.GetCollection()
+            .Find(filter)
+            .Skip(skip)
+            .Limit(limit)
+            .ToList();
+
+        return Ok(users);
+    }
+
 
         [HttpGet("{id}")]
         public ActionResult<User> Get(string id)

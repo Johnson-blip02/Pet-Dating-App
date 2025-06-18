@@ -5,7 +5,8 @@
     "petType": "Cat",
     "petPreferences": ["Dog"],
     "photoPath": "images/cat1.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "Admin"
   },
   {
     "userName": "Mochi",
@@ -13,7 +14,8 @@
     "petType": "Cat",
     "petPreferences": ["Dog", "Cat"],
     "photoPath": "images/cat2.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Luna",
@@ -21,7 +23,8 @@
     "petType": "Cat",
     "petPreferences": ["Cat"],
     "photoPath": "images/cat3.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Cleo",
@@ -29,7 +32,8 @@
     "petType": "Cat",
     "petPreferences": ["Cat"],
     "photoPath": "images/cat4.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Snowball",
@@ -37,7 +41,8 @@
     "petType": "Cat",
     "petPreferences": ["Cat"],
     "photoPath": "images/cat5.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Rex",
@@ -45,7 +50,8 @@
     "petType": "Dog",
     "petPreferences": ["Dog"],
     "photoPath": "images/dog1.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Bailey",
@@ -53,7 +59,8 @@
     "petType": "Dog",
     "petPreferences": ["Dog", "Rabbit"],
     "photoPath": "images/dog2.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Zeus",
@@ -61,7 +68,8 @@
     "petType": "Dog",
     "petPreferences": ["Cat"],
     "photoPath": "images/dog3.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Toby",
@@ -69,7 +77,8 @@
     "petType": "Dog",
     "petPreferences": ["Dog", "Cat"],
     "photoPath": "images/dog4.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   },
   {
     "userName": "Rocky",
@@ -77,6 +86,7 @@
     "petType": "Dog",
     "petPreferences": ["Dog"],
     "photoPath": "images/dog5.jpg",
-    "location": "New Zealand"
+    "location": "New Zealand",
+    "role": "User"
   }
 ]
