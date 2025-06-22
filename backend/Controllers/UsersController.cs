@@ -42,13 +42,11 @@ namespace backend.Controllers
 
         var skip = (page - 1) * limit;
 
-        var users = _userService.GetCollection()
-            .Find(filter)
-            .Skip(skip)
-            .Limit(limit)
-            .ToList();
+        var collection = _userService.GetCollection();
+        var users = collection.Find(filter).Skip(skip).Limit(limit).ToList();
+        var totalCount = (int)collection.CountDocuments(filter);
 
-        return Ok(users);
+        return Ok(new { users, totalCount });
     }
 
 
