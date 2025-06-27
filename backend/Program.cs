@@ -14,6 +14,8 @@ Console.WriteLine("🌐 MongoDB Connection String: " + connectionString);
 
 // Register service
 builder.Services.AddSingleton<UserService>();
+builder.Services.AddSingleton<AccountService>();
+
 
 // ✅ CORS MUST BE ADDED BEFORE BUILD
 builder.Services.AddCors(options =>

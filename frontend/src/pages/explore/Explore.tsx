@@ -17,11 +17,19 @@ export default function Explore() {
   });
 
   const fetchUsers = async () => {
+    const accountId = localStorage.getItem("accountId");
+
+    let ownPetId = null;
+    if (accountId) {
+      const res = await fetch(
+        `http://localhost:5074/api/accounts/${accountId}`
+      );
+      const account = await res.json();
+      ownPetId = account.petProfileId;
+    }
+
     const params = new URLSearchParams();
-    if (filters.petType) params.append("petType", filters.petType);
-    if (filters.location) params.append("location", filters.location);
-    if (filters.minAge) params.append("minAge", filters.minAge);
-    if (filters.maxAge) params.append("maxAge", filters.maxAge);
+    // Append filters here...
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
@@ -29,7 +37,10 @@ export default function Explore() {
       `http://localhost:5074/api/users?${params.toString()}`
     );
     const data = await res.json();
-    setUsers(data.users);
+
+    // Filter out own profile
+    const filteredUsers = data.users.filter((u: any) => u.id !== ownPetId);
+    setUsers(filteredUsers);
     setTotalCount(data.totalCount);
   };
 

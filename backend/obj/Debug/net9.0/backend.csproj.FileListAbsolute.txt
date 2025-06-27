@@ -43,3 +43,4 @@ C:\Users\Johnson\Downloads\pet-dating-app\backend\obj\Debug\net9.0\backend.genru
 C:\Users\Johnson\Downloads\pet-dating-app\backend\obj\Debug\net9.0\ref\backend.dll
 C:\Users\Johnson\Downloads\pet-dating-app\backend\bin\Debug\net9.0\backend.staticwebassets.runtime.json
 C:\Users\Johnson\Downloads\pet-dating-app\backend\bin\Debug\net9.0\Models\data.json
+C:\Users\Johnson\Downloads\pet-dating-app\backend\bin\Debug\net9.0\Models\accounts.json

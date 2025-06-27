@@ -17,37 +17,37 @@ namespace backend.Controllers
             _userService = userService;
         }
 
-    [HttpGet]
-    public ActionResult<List<User>> GetFilteredUsers(
-        [FromQuery] string? petType,
-        [FromQuery] int? minAge,
-        [FromQuery] int? maxAge,
-        [FromQuery] string? location,
-        [FromQuery] int page = 1,
-        [FromQuery] int limit = 10)
-    {
-        var filter = Builders<User>.Filter.Empty;
+        [HttpGet]
+        public ActionResult<List<User>> GetFilteredUsers(
+            [FromQuery] string? petType,
+            [FromQuery] int? minAge,
+            [FromQuery] int? maxAge,
+            [FromQuery] string? location,
+            [FromQuery] int page = 1,
+            [FromQuery] int limit = 10)
+        {
+            var filter = Builders<User>.Filter.Empty;
 
-        if (!string.IsNullOrEmpty(petType))
-            filter &= Builders<User>.Filter.Eq(u => u.PetType, petType);
+            if (!string.IsNullOrEmpty(petType))
+                filter &= Builders<User>.Filter.Eq(u => u.PetType, petType);
 
-        if (!string.IsNullOrEmpty(location))
-            filter &= Builders<User>.Filter.Eq(u => u.Location, location);
+            if (!string.IsNullOrEmpty(location))
+                filter &= Builders<User>.Filter.Eq(u => u.Location, location);
 
-        if (minAge.HasValue)
-            filter &= Builders<User>.Filter.Gte(u => u.Age, minAge.Value);
+            if (minAge.HasValue)
+                filter &= Builders<User>.Filter.Gte(u => u.Age, minAge.Value);
 
-        if (maxAge.HasValue)
-            filter &= Builders<User>.Filter.Lte(u => u.Age, maxAge.Value);
+            if (maxAge.HasValue)
+                filter &= Builders<User>.Filter.Lte(u => u.Age, maxAge.Value);
 
-        var skip = (page - 1) * limit;
+            var skip = (page - 1) * limit;
 
-        var collection = _userService.GetCollection();
-        var users = collection.Find(filter).Skip(skip).Limit(limit).ToList();
-        var totalCount = (int)collection.CountDocuments(filter);
+            var collection = _userService.GetCollection();
+            var users = collection.Find(filter).Skip(skip).Limit(limit).ToList();
+            var totalCount = (int)collection.CountDocuments(filter);
 
-        return Ok(new { users, totalCount });
-    }
+            return Ok(new { users, totalCount });
+        }
 
 
         [HttpGet("{id}")]

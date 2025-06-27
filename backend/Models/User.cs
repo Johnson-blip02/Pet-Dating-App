@@ -34,7 +34,6 @@ namespace backend.Models
         [Required(ErrorMessage = "Location is required")]
         public string Location { get; set; } = string.Empty;
 
-        [BsonElement("role")]
-        public string Role { get; set; } = "User";
+        
     }
 }

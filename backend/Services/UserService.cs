@@ -25,6 +25,7 @@ namespace backend.Services
         public void Update(string id, User userIn) => _users.ReplaceOne(u => u.Id == id, userIn);
         public void Remove(string id) => _users.DeleteOne(u => u.Id == id);
         
+        
         public IMongoCollection<User> GetCollection()
         {
             return _users;

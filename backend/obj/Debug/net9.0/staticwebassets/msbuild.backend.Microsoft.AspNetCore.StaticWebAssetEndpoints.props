@@ -1,5 +1,29 @@
 ﻿<Project>
   <ItemGroup>
+    <StaticWebAssetEndpoint Include="_content/backend/images/32f4e681-3b89-4261-bf12-472ca2d0041b.dkoc7g9dpe.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\32f4e681-3b89-4261-bf12-472ca2d0041b.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"dkoc7g9dpe"},{"Name":"integrity","Value":"sha256-o4En1vMy\u002BhXByd18VEbZYt8\u002B\u002Bed6skIK8Q3iebIYXOI="},{"Name":"label","Value":"_content/backend/images/32f4e681-3b89-4261-bf12-472ca2d0041b.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"3169197"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022o4En1vMy\u002BhXByd18VEbZYt8\u002B\u002Bed6skIK8Q3iebIYXOI=\u0022"},{"Name":"Last-Modified","Value":"Sun, 22 Jun 2025 02:56:29 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/backend/images/32f4e681-3b89-4261-bf12-472ca2d0041b.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\32f4e681-3b89-4261-bf12-472ca2d0041b.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-o4En1vMy\u002BhXByd18VEbZYt8\u002B\u002Bed6skIK8Q3iebIYXOI="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"3169197"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022o4En1vMy\u002BhXByd18VEbZYt8\u002B\u002Bed6skIK8Q3iebIYXOI=\u0022"},{"Name":"Last-Modified","Value":"Sun, 22 Jun 2025 02:56:29 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/backend/images/bec6f5be-b35e-4e54-b42a-88eac9631cf0.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\bec6f5be-b35e-4e54-b42a-88eac9631cf0.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"integrity","Value":"sha256-q5HOcvavwTBhC/uc55i2WP\u002B0BMVo112XuN7ZrBppo/A="}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=3600, must-revalidate"},{"Name":"Content-Length","Value":"4160180"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022q5HOcvavwTBhC/uc55i2WP\u002B0BMVo112XuN7ZrBppo/A=\u0022"},{"Name":"Last-Modified","Value":"Sun, 22 Jun 2025 02:33:23 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
+    <StaticWebAssetEndpoint Include="_content/backend/images/bec6f5be-b35e-4e54-b42a-88eac9631cf0.rkgzb2amyp.jpg">
+      <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\bec6f5be-b35e-4e54-b42a-88eac9631cf0.jpg'))</AssetFile>
+      <Selectors><![CDATA[[]]]></Selectors>
+      <EndpointProperties><![CDATA[[{"Name":"fingerprint","Value":"rkgzb2amyp"},{"Name":"integrity","Value":"sha256-q5HOcvavwTBhC/uc55i2WP\u002B0BMVo112XuN7ZrBppo/A="},{"Name":"label","Value":"_content/backend/images/bec6f5be-b35e-4e54-b42a-88eac9631cf0.jpg"}]]]></EndpointProperties>
+      <ResponseHeaders><![CDATA[[{"Name":"Accept-Ranges","Value":"bytes"},{"Name":"Cache-Control","Value":"max-age=31536000, immutable"},{"Name":"Content-Length","Value":"4160180"},{"Name":"Content-Type","Value":"image/jpeg"},{"Name":"ETag","Value":"\u0022q5HOcvavwTBhC/uc55i2WP\u002B0BMVo112XuN7ZrBppo/A=\u0022"},{"Name":"Last-Modified","Value":"Sun, 22 Jun 2025 02:33:23 GMT"}]]]></ResponseHeaders>
+    </StaticWebAssetEndpoint>
     <StaticWebAssetEndpoint Include="_content/backend/images/cat1.jpg">
       <AssetFile>$([System.IO.Path]::GetFullPath('$(MSBuildThisFileDirectory)..\staticwebassets\images\cat1.jpg'))</AssetFile>
       <Selectors><![CDATA[[]]]></Selectors>
