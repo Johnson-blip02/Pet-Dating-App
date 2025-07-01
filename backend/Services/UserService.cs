@@ -24,8 +24,33 @@ namespace backend.Services
         }
         public void Update(string id, User userIn) => _users.ReplaceOne(u => u.Id == id, userIn);
         public void Remove(string id) => _users.DeleteOne(u => u.Id == id);
-        
-        public IMongoCollection<User> GetCollection()
+
+        public bool LikeUser(string likerId, string likedId)
+        {
+        var liker = _users.Find(u => u.Id == likerId).FirstOrDefault();
+        var liked = _users.Find(u => u.Id == likedId).FirstOrDefault();
+
+        if (liker == null || liked == null) return false;
+
+        // Add likedId to liker
+        if (!liker.LikedUserIds.Contains(likedId))
+        {
+            liker.LikedUserIds.Add(likedId);
+            Update(likerId, liker);
+        }
+
+        // Add likerId to liked
+        if (!liked.LikedByUserIds.Contains(likerId))
+        {
+            liked.LikedByUserIds.Add(likerId);
+            Update(likedId, liked);
+        }
+
+        return liked.LikedUserIds.Contains(likerId);
+        }
+
+
+    public IMongoCollection<User> GetCollection()
         {
             return _users;
         }

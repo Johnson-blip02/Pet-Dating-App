@@ -1,26 +1,64 @@
 import React, { useState } from "react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { useNavigate } from "react-router-dom";
+import { setCookie } from "../../utils/cookies"; // Import the new cookie utility
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle login logic here
-    alert(`Logging in with\nEmail: ${email}\nPassword: ${password}`);
+
+    try {
+      const res = await fetch("http://localhost:5074/api/accounts/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
+
+      if (!res.ok) {
+        throw new Error("Login failed");
+      }
+
+      const data = await res.json();
+
+      // Fetch account to get petProfileId
+      const accountRes = await fetch(
+        `http://localhost:5074/api/accounts/${data.id}`
+      );
+      if (!accountRes.ok) {
+        throw new Error("Failed to fetch account details");
+      }
+
+      const account = await accountRes.json();
+
+      // Set cookies using the new utility
+      setCookie("accountId", data.id);
+      setCookie("petProfileId", account.petProfileId);
+
+      // Store in localStorage if needed (optional)
+      localStorage.setItem("accountId", data.id);
+      localStorage.setItem("petProfileId", account.petProfileId);
+
+      navigate("/explore");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your credentials and try again.");
+    }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <main className=" flex-grow flex items-center justify-center bg-gray-50 p-4">
+      <main className="flex-grow flex items-center justify-center bg-gray-50 p-4">
         <div className="max-w-md w-full bg-white p-8 rounded shadow">
           <h2 className="text-2xl font-bold mb-6 text-center">
             Login to Your Account
           </h2>
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div>
               <label htmlFor="email" className="block mb-1 font-medium">
                 Email
@@ -31,7 +69,7 @@ export default function Login() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2"
                 placeholder="you@example.com"
               />
             </div>
@@ -46,7 +84,7 @@ export default function Login() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full border border-gray-300 rounded px-3 py-2"
                 placeholder="Enter your password"
               />
             </div>
