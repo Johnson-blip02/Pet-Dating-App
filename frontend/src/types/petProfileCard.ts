@@ -1,10 +1,8 @@
-export interface PetProfile {
+export interface PetCardProps {
   id: string;
   userName: string;
   age: number;
   petType: string;
   location: string;
   photoPath: string;
-  likedUserIds: string[];
-  likedByUserIds: string[];
 }

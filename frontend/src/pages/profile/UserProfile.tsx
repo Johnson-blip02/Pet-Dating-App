@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { getCookie } from "../../utils/cookies"; // Import cookie utility
 import type { Account } from "../../types/account";
 import type { PetProfile } from "../../types/petProfile";
 
@@ -10,12 +11,13 @@ export default function UserProfile() {
   const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState<Account | null>(null);
   const [petProfile, setPetProfile] = useState<PetProfile | null>(null);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const accountId = localStorage.getItem("accountId");
+    const accountId = getCookie("accountId"); // Use cookie instead of localStorage
 
     if (!accountId) {
-      navigate("/profile-creation");
+      navigate("/login");
       return;
     }
 
@@ -27,18 +29,25 @@ export default function UserProfile() {
       .then((data) => {
         setAccount(data);
 
-        if (!data.petProfileId) {
+        const petProfileId = getCookie("petProfileId") || data.petProfileId;
+        if (!petProfileId) {
           navigate("/profile-creation");
         } else {
-          // Fetch pet profile
-          fetch(`http://localhost:5074/api/users/${data.petProfileId}`)
-            .then((res) => res.json())
+          fetch(`http://localhost:5074/api/users/${petProfileId}`)
+            .then((res) => {
+              if (!res.ok) throw new Error("Failed to fetch pet profile");
+              return res.json();
+            })
             .then(setPetProfile)
-            .catch(console.error);
+            .catch((err) => {
+              console.error(err);
+              setError("Failed to load pet profile");
+            });
         }
       })
       .catch((err) => {
         console.error(err);
+        setError("Failed to load account information");
         navigate("/login");
       })
       .finally(() => setLoading(false));
@@ -53,16 +62,21 @@ export default function UserProfile() {
       <main className="flex-grow p-6 bg-gray-50">
         <div className="max-w-xl mx-auto bg-white p-6 rounded shadow">
           <h2 className="text-2xl font-bold mb-4">My Profile</h2>
-          <p>
-            <strong>Email:</strong> {account.email}
-          </p>
-          <p>
-            <strong>Role:</strong> {account.role}
-          </p>
+
+          {error && <div className="text-red-500 mb-4">{error}</div>}
+
+          <div className="space-y-2">
+            <p>
+              <strong>Email:</strong> {account.email}
+            </p>
+            <p>
+              <strong>Role:</strong> {account.role}
+            </p>
+          </div>
 
           {petProfile ? (
-            <>
-              <h3 className="text-xl font-semibold mt-6 mb-2">Pet Profile</h3>
+            <div className="mt-6 space-y-2">
+              <h3 className="text-xl font-semibold">Pet Profile</h3>
               <p>
                 <strong>Name:</strong> {petProfile.userName}
               </p>
@@ -75,14 +89,19 @@ export default function UserProfile() {
               <p>
                 <strong>Location:</strong> {petProfile.location}
               </p>
-              <img
-                src={`http://localhost:5074/${petProfile.photoPath}`}
-                alt="Pet"
-                className="w-48 h-48 object-cover rounded mt-2"
-              />
-            </>
+              {petProfile.photoPath && (
+                <img
+                  src={`http://localhost:5074/${petProfile.photoPath.replace(
+                    /^\/+/,
+                    ""
+                  )}`}
+                  alt="Pet"
+                  className="w-48 h-48 object-cover rounded mt-2"
+                />
+              )}
+            </div>
           ) : (
-            <p className="mt-4 text-yellow-700">Loading pet profile...</p>
+            <p className="mt-4 text-yellow-700">No pet profile found</p>
           )}
         </div>
       </main>

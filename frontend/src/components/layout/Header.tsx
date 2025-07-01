@@ -4,19 +4,30 @@ import { useEffect, useState } from "react";
 
 export default function Header() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [hasPetProfile, setHasPetProfile] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation(); // to re-check on every route change
+  const location = useLocation();
 
   useEffect(() => {
-    const cookieExists = !!getCookie("accountId");
-    setIsLoggedIn(cookieExists);
-  }, [location]); // re-run when route changes
+    // Check both accountId and petProfileId for more reliable auth state
+    const accountExists = !!getCookie("accountId");
+    const petProfileExists = !!getCookie("petProfileId");
+    setIsLoggedIn(accountExists);
+    setHasPetProfile(petProfileExists);
+  }, [location]);
 
   const handleLogout = () => {
+    // Delete all auth-related cookies
     deleteCookie("accountId");
+    deleteCookie("petProfileId");
+
+    // Clear localStorage if used
     localStorage.removeItem("accountId");
-    setIsLoggedIn(false); // update local state
-    navigate("/signup");
+    localStorage.removeItem("petProfileId");
+
+    // Update state and redirect
+    setIsLoggedIn(false);
+    navigate("/");
   };
 
   return (
@@ -29,10 +40,24 @@ export default function Header() {
 
         {/* Navigation Links */}
         <nav className="hidden md:flex space-x-6">
-          {isLoggedIn && (
-            <Link to="/explore" className="text-gray-600 hover:text-gray-900">
-              Explore
-            </Link>
+          {isLoggedIn && hasPetProfile && (
+            <>
+              <Link to="/explore" className="text-gray-600 hover:text-gray-900">
+                Explore
+              </Link>
+              <Link
+                to="/liked-profile"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Likes
+              </Link>
+              <Link
+                to="/messenger"
+                className="text-gray-600 hover:text-gray-900"
+              >
+                Messenger
+              </Link>
+            </>
           )}
           <Link to="/help" className="text-gray-600 hover:text-gray-900">
             Help

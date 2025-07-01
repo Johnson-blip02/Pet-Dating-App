@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "dt74EUWBGHJ+0haYjjEd94QKrOpinsrEhF48PZKDy+w=",
+  "Hash": "EgcWZHGUNbiMX6QN+Sa7+8o6NDFEirH19ekbKdNXx1k=",
   "Source": "backend",
   "BasePath": "_content/backend",
   "Mode": "Default",
@@ -36,6 +36,27 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\32f4e681-3b89-4261-bf12-472ca2d0041b.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg",
+      "SourceId": "backend",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\",
+      "BasePath": "_content/backend",
+      "RelativePath": "images/5de1a658-0ee7-40a8-904b-52f13ebc44ce#[.{fingerprint}]?.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "Fingerprint": "g6iaz5l8iq",
+      "Integrity": "iAEmkMvETLQLVKRxWzRORUhZSIt13ZWVzAR7khuGU6o=",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg"
     },
     {
       "Identity": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\bec6f5be-b35e-4e54-b42a-88eac9631cf0.jpg",
@@ -349,6 +370,88 @@
         {
           "Name": "integrity",
           "Value": "sha256-o4En1vMy+hXByd18VEbZYt8++ed6skIK8Q3iebIYXOI="
+        }
+      ]
+    },
+    {
+      "Route": "images/5de1a658-0ee7-40a8-904b-52f13ebc44ce.g6iaz5l8iq.jpg",
+      "AssetFile": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2795521"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iAEmkMvETLQLVKRxWzRORUhZSIt13ZWVzAR7khuGU6o=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Jun 2025 11:18:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "g6iaz5l8iq"
+        },
+        {
+          "Name": "label",
+          "Value": "images/5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-iAEmkMvETLQLVKRxWzRORUhZSIt13ZWVzAR7khuGU6o="
+        }
+      ]
+    },
+    {
+      "Route": "images/5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg",
+      "AssetFile": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\5de1a658-0ee7-40a8-904b-52f13ebc44ce.jpg",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2795521"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "image/jpeg"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"iAEmkMvETLQLVKRxWzRORUhZSIt13ZWVzAR7khuGU6o=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Mon, 30 Jun 2025 11:18:50 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=3600, must-revalidate"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "integrity",
+          "Value": "sha256-iAEmkMvETLQLVKRxWzRORUhZSIt13ZWVzAR7khuGU6o="
         }
       ]
     },

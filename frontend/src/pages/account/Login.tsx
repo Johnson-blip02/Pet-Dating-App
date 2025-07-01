@@ -1,30 +1,52 @@
 import React, { useState } from "react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import { useNavigate } from "react-router-dom"; // ✅ Correct import
+import { useNavigate } from "react-router-dom";
+import { setCookie } from "../../utils/cookies"; // Import the new cookie utility
 
 export default function Login() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
-  const navigate = useNavigate(); // ✅ Correct usage
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const res = await fetch("http://localhost:5074/api/accounts/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email, password }),
-    });
+    try {
+      const res = await fetch("http://localhost:5074/api/accounts/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
+      if (!res.ok) {
+        throw new Error("Login failed");
+      }
+
       const data = await res.json();
-      localStorage.setItem("accountId", data.id); // optional if using both
-      document.cookie = `accountId=${data.id}; path=/`; // <- add this
+
+      // Fetch account to get petProfileId
+      const accountRes = await fetch(
+        `http://localhost:5074/api/accounts/${data.id}`
+      );
+      if (!accountRes.ok) {
+        throw new Error("Failed to fetch account details");
+      }
+
+      const account = await accountRes.json();
+
+      // Set cookies using the new utility
+      setCookie("accountId", data.id);
+      setCookie("petProfileId", account.petProfileId);
+
+      // Store in localStorage if needed (optional)
+      localStorage.setItem("accountId", data.id);
+      localStorage.setItem("petProfileId", account.petProfileId);
 
       navigate("/explore");
-    } else {
-      alert("Login failed.");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Login failed. Please check your credentials and try again.");
     }
   };
 

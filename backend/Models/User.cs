@@ -34,6 +34,10 @@ namespace backend.Models
         [Required(ErrorMessage = "Location is required")]
         public string Location { get; set; } = string.Empty;
 
-        
+        [BsonElement("likedUsersIds")]
+        public List<string> LikedUserIds { get; set; } = new();
+        [BsonElement("likedByUsersIds")]
+        public List<string> LikedByUserIds { get; set; } = new();
+
     }
 }

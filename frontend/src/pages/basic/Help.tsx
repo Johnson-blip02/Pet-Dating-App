@@ -14,10 +14,10 @@ export default function Help() {
           </h2>
           <ul className="space-y-4">
             <li>
-              <p className="font-medium">How do I reset my password?</p>
+              <p className="font-medium">How do I connect with other pets?</p>
               <p className="text-gray-700">
-                Go to the login page and click “Forgot password?” to receive a
-                reset link.
+                Go to the login page and sign in, once completed click on the
+                explore in header.
               </p>
             </li>
             <li>

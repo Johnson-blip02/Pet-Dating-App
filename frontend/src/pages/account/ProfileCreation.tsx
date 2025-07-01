@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
-import { getCookie } from "../../utils/cookies";
+import { getCookie, setCookie } from "../../utils/cookies";
 
 export default function ProfileCreation() {
   type PetProfileForm = {
@@ -24,6 +24,8 @@ export default function ProfileCreation() {
   });
 
   const [accountId, setAccountId] = useState("");
+  const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,32 +71,54 @@ export default function ProfileCreation() {
       setForm((prev) => ({ ...prev, photoPath: data.path }));
     } catch (error) {
       console.error("Image upload failed:", error);
-      alert("Image upload failed.");
+      setError("Image upload failed");
     }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
+    setError("");
 
-    const createRes = await fetch("http://localhost:5074/api/users", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
-    });
-
-    const newProfile = await createRes.json();
-
-    await fetch(
-      `http://localhost:5074/api/accounts/${accountId}/link-profile`,
-      {
-        method: "PUT",
+    try {
+      // Create pet profile
+      const createRes = await fetch("http://localhost:5074/api/users", {
+        method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ petProfileId: newProfile.id }),
-      }
-    );
+        body: JSON.stringify(form),
+      });
 
-    alert("Pet profile created and linked!");
-    navigate("/explore");
+      if (!createRes.ok) {
+        throw new Error("Failed to create profile");
+      }
+
+      const newProfile = await createRes.json();
+
+      // Link profile to account
+      const linkRes = await fetch(
+        `http://localhost:5074/api/accounts/${accountId}/link-profile`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ petProfileId: newProfile.id }),
+        }
+      );
+
+      if (!linkRes.ok) {
+        throw new Error("Failed to link profile");
+      }
+
+      // Set petProfileId cookie using utility
+      setCookie("petProfileId", newProfile.id);
+
+      alert("Pet profile created and linked!");
+      navigate("/explore");
+    } catch (err) {
+      console.error("Profile creation error:", err);
+      setError(err instanceof Error ? err.message : "An error occurred");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -102,6 +126,7 @@ export default function ProfileCreation() {
       <Header />
       <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
         <h2 className="text-2xl font-bold mb-4">Set Up Your Pet Profile</h2>
+        {error && <div className="text-red-500 mb-4">{error}</div>}
         <form onSubmit={handleSubmit} className="space-y-4">
           <input
             required
@@ -159,9 +184,10 @@ export default function ProfileCreation() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
+            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            disabled={isLoading}
           >
-            Submit
+            {isLoading ? "Creating Profile..." : "Submit"}
           </button>
         </form>
       </div>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import PetCard from "../../components/cards/PetCard";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
+import { useNavigate } from "react-router-dom";
 
 export default function Explore() {
   const [users, setUsers] = useState([]);
@@ -9,6 +10,7 @@ export default function Explore() {
   const [totalCount, setTotalCount] = useState(0);
   const limit = 6; // cards per page
   const totalPages = Math.ceil(totalCount / limit);
+  const navigate = useNavigate();
   const [filters, setFilters] = useState({
     petType: "",
     location: "",
@@ -19,26 +21,32 @@ export default function Explore() {
   const fetchUsers = async () => {
     const accountId = localStorage.getItem("accountId");
 
-    let ownPetId = null;
-    if (accountId) {
-      const res = await fetch(
-        `http://localhost:5074/api/accounts/${accountId}`
-      );
-      const account = await res.json();
-      ownPetId = account.petProfileId;
+    if (!accountId) {
+      navigate("/");
+      return;
     }
 
+    let ownPetId = null;
+    const resAccount = await fetch(
+      `http://localhost:5074/api/accounts/${accountId}`
+    );
+    const account = await resAccount.json();
+    ownPetId = account.petProfileId;
+
     const params = new URLSearchParams();
-    // Append filters here...
+    if (filters.petType) params.append("petType", filters.petType);
+    if (filters.location) params.append("location", filters.location);
+    if (filters.minAge) params.append("minAge", filters.minAge);
+    if (filters.maxAge) params.append("maxAge", filters.maxAge);
+
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
-    const res = await fetch(
+    const resUsers = await fetch(
       `http://localhost:5074/api/users?${params.toString()}`
     );
-    const data = await res.json();
+    const data = await resUsers.json();
 
-    // Filter out own profile
     const filteredUsers = data.users.filter((u: any) => u.id !== ownPetId);
     setUsers(filteredUsers);
     setTotalCount(data.totalCount);

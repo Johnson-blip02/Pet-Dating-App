@@ -1,17 +1,37 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import Header from "../components/layout/Header";
-import Footer from "../components/layout/Footer";
+import Header from "../../components/layout/Header";
+import Footer from "../../components/layout/Footer";
+import { getCookie } from "../../utils/cookies";
 
 export default function PetProfile() {
-  const { id } = useParams();
+  const { id: likedId } = useParams(); // profile being viewed
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5074/api/users/${id}`)
+    fetch(`http://localhost:5074/api/users/${likedId}`)
       .then((res) => res.json())
       .then((data) => setUser(data));
-  }, [id]);
+  }, [likedId]);
+
+  const handleLike = async () => {
+    const likerId = getCookie("petProfileId"); // or localStorage.getItem("accountId")
+    if (!likerId || !likedId) return alert("Missing account info.");
+
+    const res = await fetch(
+      `http://localhost:5074/api/users/${likerId}/like/${likedId}`,
+      { method: "PUT" }
+    );
+
+    if (!res.ok) return alert("Failed to like.");
+
+    const result = await res.json();
+    if (result.match) {
+      alert("🎉 It's a match!");
+    } else {
+      alert("You liked this profile ❤️");
+    }
+  };
 
   if (!user) return <p className="text-center mt-10">Loading...</p>;
 
@@ -35,7 +55,7 @@ export default function PetProfile() {
 
         <button
           className="bg-pink-500 text-white px-6 py-2 rounded hover:bg-pink-600 transition"
-          onClick={() => alert("❤️ Like functionality coming soon!")}
+          onClick={handleLike}
         >
           ❤️ Like
         </button>

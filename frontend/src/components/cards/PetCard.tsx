@@ -1,13 +1,5 @@
 import { Link } from "react-router-dom";
-
-interface PetCardProps {
-  id: string;
-  userName: string;
-  age: number;
-  petType: string;
-  location: string;
-  photoPath: string;
-}
+import type { PetCardProps } from "../../types/petProfileCard";
 
 export default function PetCard(props: PetCardProps) {
   const { userName, age, petType, location, photoPath, id } = props;
