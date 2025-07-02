@@ -10,7 +10,7 @@ interface ErrorResponse {
   message?: string;
 }
 
-export default function Signup() {
+export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState(""); // New state

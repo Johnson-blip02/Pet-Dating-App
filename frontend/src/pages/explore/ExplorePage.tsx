@@ -4,7 +4,7 @@ import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
 
-export default function Explore() {
+export default function ExplorePage() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);

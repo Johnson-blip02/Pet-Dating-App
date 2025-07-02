@@ -4,7 +4,7 @@ import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../../utils/cookies"; // Import the new cookie utility
 
-export default function Login() {
+export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const navigate = useNavigate();

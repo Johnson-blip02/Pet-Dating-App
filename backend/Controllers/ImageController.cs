@@ -4,15 +4,11 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImageController : ControllerBase
+    public class ImageController(IWebHostEnvironment env) : ControllerBase
     {
-        private readonly IWebHostEnvironment _env;
+        private readonly IWebHostEnvironment _env = env;
 
-        public ImageController(IWebHostEnvironment env)
-        {
-            _env = env;
-        }
-
+        #region PostMethods
         [HttpPost("upload")]
         public async Task<IActionResult> Upload(IFormFile file)
         {
@@ -36,5 +32,7 @@ namespace backend.Controllers
             // Return relative path to store in MongoDB
             return Ok(new { path = $"images/{fileName}" });
         }
+        #endregion
+        
     }
 }

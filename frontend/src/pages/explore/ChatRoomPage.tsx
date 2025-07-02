@@ -5,7 +5,7 @@ import useChatWebSocket from "../../hooks/useChatWebSocket";
 import type { ChatMessage } from "../../types/chatMessage";
 import { useNavigate } from "react-router-dom";
 
-export default function ChatRoom() {
+export default function ChatRoomPage() {
   const { otherUserId } = useParams<{ otherUserId: string }>();
   const petProfileId = getCookie("petProfileId");
   const [input, setInput] = useState("");

@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
-import type { PetCardProps } from "../../types/petProfileCard";
+import type { PetProfile } from "../../types/petProfile";
 
-export default function PetCard(props: PetCardProps) {
+export default function PetCard(props: PetProfile) {
   const { userName, age, petType, location, photoPath, id } = props;
 
   return (

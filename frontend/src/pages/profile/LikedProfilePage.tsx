@@ -6,7 +6,7 @@ import Header from "../../components/layout/Header";
 import { getCookie } from "../../utils/cookies";
 import type { PetProfile } from "../../types/petProfile";
 
-export default function LikedProfile() {
+export default function LikedProfilePage() {
   const [profile, setProfile] = useState<PetProfile | null>(null);
   const [likedUsers, setLikedUsers] = useState<PetProfile[]>([]);
   const [likedByUsers, setLikedByUsers] = useState<PetProfile[]>([]);
@@ -60,7 +60,7 @@ export default function LikedProfile() {
   const renderCard = (user: PetProfile) => (
     <Link
       key={user.id}
-      to={`/pet/${user.id}`}
+      to={`/profile/${user.id}`}
       className="bg-white rounded-lg shadow p-4 hover:shadow-md transition w-full sm:w-64"
     >
       <img
