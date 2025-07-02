@@ -4,7 +4,7 @@ import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { getCookie, setCookie } from "../../utils/cookies";
 
-export default function ProfileCreation() {
+export default function ProfileCreationPage() {
   type PetProfileForm = {
     userName: string;
     age: string;

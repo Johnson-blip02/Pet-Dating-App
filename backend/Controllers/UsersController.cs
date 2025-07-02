@@ -1,5 +1,6 @@
 using backend.Models;
 using backend.Services;
+using backend.WebSockets;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Driver;
 
@@ -8,17 +9,16 @@ namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController(
+        UserService userService,
+        ChatMessageService chatService,
+        ChatWebSocketHandler wsHandler) : ControllerBase
     {
-        private readonly UserService _userService;
-
-        public UsersController(UserService userService)
-        {
-            _userService = userService;
-        }
+        private readonly UserService _userService = userService;
+        private readonly ChatMessageService _chatService = chatService;
+        private readonly ChatWebSocketHandler _wsHandler = wsHandler;
 
         #region GetMethods
-
         [HttpGet]
         public ActionResult<List<User>> GetFilteredUsers(
             [FromQuery] string? petType,
@@ -51,7 +51,6 @@ namespace backend.Controllers
             return Ok(new { users, totalCount });
         }
 
-
         [HttpGet("{id}")]
         public ActionResult<User> Get(string id)
         {
@@ -76,19 +75,15 @@ namespace backend.Controllers
 
             return Ok(mutualMatches);
         }
-
-
         #endregion
 
         #region PostMethods
-
         [HttpPost]
         public ActionResult<User> Create(User user)
         {
             _userService.Create(user);
             return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
         }
-
         #endregion
 
         #region PutMethods
@@ -108,10 +103,24 @@ namespace backend.Controllers
             return Ok(new { match = isMatch });
         }
 
+        [HttpPut("{likerId}/unheart/{likedId}")]
+        public async Task<IActionResult> UnheartUser(string likerId, string likedId)
+        {
+            var success = _userService.UnheartUser(likerId, likedId);
+            if (!success) return NotFound("User not found or already unhearted.");
+
+            // Generate the roomId
+            var roomId = $"room_{new[] { likerId, likedId }.OrderBy(id => id).Aggregate((a, b) => $"{a}_{b}")}";
+
+            // Delete chat history and room sockets
+            await _chatService.DeleteMessagesInRoomAsync(roomId);
+            _wsHandler.RemoveRoom(roomId);
+
+            return Ok(new { message = $"Unhearted user and deleted chat room {roomId}." });
+        }
         #endregion
 
         #region DeleteMethods
-
         [HttpDelete("{id}")]
         public IActionResult Delete(string id)
         {
@@ -120,7 +129,6 @@ namespace backend.Controllers
             _userService.Remove(id);
             return NoContent();
         }
-
         #endregion
     
     }

@@ -6,7 +6,7 @@ import Footer from "../../components/layout/Footer";
 import { getCookie } from "../../utils/cookies";
 import type { MatchUser } from "../../types/match";
 
-export default function Messenger() {
+export default function MessengerPage() {
   const [matches, setMatches] = useState<MatchUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -6,7 +6,7 @@ import { getCookie } from "../../utils/cookies"; // Import cookie utility
 import type { Account } from "../../types/account";
 import type { PetProfile } from "../../types/petProfile";
 
-export default function UserProfile() {
+export default function UserProfilePage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [account, setAccount] = useState<Account | null>(null);
