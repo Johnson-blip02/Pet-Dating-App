@@ -44,5 +44,17 @@ public class ChatMessageService
         var result = await _messages.DeleteManyAsync(msg => msg.RoomId == roomId);
         return result.DeletedCount;
     }
+
+    public async Task<long> DeleteAllMessagesByUserIdAsync(string userId)
+    {
+        var filter = Builders<ChatMessage>.Filter.Or(
+            Builders<ChatMessage>.Filter.Eq(msg => msg.SenderId, userId),
+            Builders<ChatMessage>.Filter.Eq(msg => msg.ReceiverId, userId)
+        );
+
+        var result = await _messages.DeleteManyAsync(filter);
+        return result.DeletedCount;
+    }
+
     #endregion
 }

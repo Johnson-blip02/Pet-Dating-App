@@ -42,8 +42,20 @@ namespace backend.Services
         #endregion
 
         #region Delete
-        public void Remove(string id) =>
+        public DeleteResult DeleteUser(string id) =>
             _users.DeleteOne(u => u.Id == id);
+
+        public async Task RemoveLikesFromOthersAsync(string deletedUserId)
+        {
+            var filterLiked = Builders<User>.Filter.AnyEq(u => u.LikedUserIds, deletedUserId);
+            var updateLiked = Builders<User>.Update.Pull(u => u.LikedUserIds, deletedUserId);
+
+            var filterLikedBy = Builders<User>.Filter.AnyEq(u => u.LikedByUserIds, deletedUserId);
+            var updateLikedBy = Builders<User>.Update.Pull(u => u.LikedByUserIds, deletedUserId);
+
+            await _users.UpdateManyAsync(filterLiked, updateLiked);
+            await _users.UpdateManyAsync(filterLikedBy, updateLikedBy);
+        }
         #endregion
 
         #region Like / Unheart Logic

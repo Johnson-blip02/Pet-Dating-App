@@ -2,15 +2,20 @@ import React, { useState } from "react";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
-import { setCookie } from "../../utils/cookies"; // Import the new cookie utility
+import { setCookie } from "../../utils/cookies";
+import { useAuth } from "../../contexts/AuthContext";
+import InputField from "../../components/form/InputField"; // Reused here ✅
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { setAccountId } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsLoading(true);
 
     try {
       const res = await fetch("http://localhost:5074/api/accounts/login", {
@@ -19,34 +24,30 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) {
-        throw new Error("Login failed");
-      }
+      if (!res.ok) throw new Error("Login failed");
 
       const data = await res.json();
 
-      // Fetch account to get petProfileId
       const accountRes = await fetch(
         `http://localhost:5074/api/accounts/${data.id}`
       );
-      if (!accountRes.ok) {
-        throw new Error("Failed to fetch account details");
-      }
+      if (!accountRes.ok) throw new Error("Failed to fetch account details");
 
       const account = await accountRes.json();
 
-      // Set cookies using the new utility
       setCookie("accountId", data.id);
       setCookie("petProfileId", account.petProfileId);
 
-      // Store in localStorage if needed (optional)
       localStorage.setItem("accountId", data.id);
       localStorage.setItem("petProfileId", account.petProfileId);
 
+      setAccountId(data.id);
       navigate("/explore");
     } catch (error) {
       console.error("Login error:", error);
       alert("Login failed. Please check your credentials and try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,42 +59,36 @@ export default function LoginPage() {
           <h2 className="text-2xl font-bold mb-6 text-center">
             Login to Your Account
           </h2>
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label htmlFor="email" className="block mb-1 font-medium">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                placeholder="you@example.com"
-              />
-            </div>
 
-            <div>
-              <label htmlFor="password" className="block mb-1 font-medium">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full border border-gray-300 rounded px-3 py-2"
-                placeholder="Enter your password"
-              />
-            </div>
+          <form onSubmit={handleLogin} className="space-y-5">
+            <InputField
+              label="Email"
+              name="email"
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+            />
+
+            <InputField
+              label="Password"
+              name="password"
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
 
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
+              disabled={isLoading}
+              className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${
+                isLoading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
             >
-              Log In
+              {isLoading ? "Logging in..." : "Log In"}
             </button>
           </form>
         </div>

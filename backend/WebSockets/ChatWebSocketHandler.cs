@@ -35,25 +35,47 @@ public class ChatWebSocketHandler
 
         var buffer = new byte[1024 * 4];
 
-        while (webSocket.State == WebSocketState.Open)
+        try
         {
-            var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
+            while (webSocket.State == WebSocketState.Open)
+            {
+                var result = await webSocket.ReceiveAsync(new ArraySegment<byte>(buffer), CancellationToken.None);
 
-            if (result.MessageType == WebSocketMessageType.Text)
-            {
-                await HandleTextMessage(buffer, result.Count, roomId);
-            }
-            else if (result.MessageType == WebSocketMessageType.Close)
-            {
-                foreach (var kvp in _roomSockets)
+                if (result.MessageType == WebSocketMessageType.Text)
                 {
-                    kvp.Value.Remove(webSocket);
+                    await HandleTextMessage(buffer, result.Count, roomId);
                 }
-
-                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+                else if (result.MessageType == WebSocketMessageType.Close)
+                {
+                    break;
+                }
             }
         }
+        catch (WebSocketException ex)
+        {
+            Console.WriteLine($"⚠️ WebSocket closed unexpectedly: {ex.Message}");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Unexpected error in WebSocket handler: {ex}");
+        }
+        finally
+        {
+            // Clean up socket from room
+            foreach (var kvp in _roomSockets)
+            {
+                kvp.Value.Remove(webSocket);
+            }
+
+            if (webSocket.State != WebSocketState.Closed)
+            {
+                await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "Closing", CancellationToken.None);
+            }
+
+            Console.WriteLine($"🔌 WebSocket disconnected from room: {roomId}");
+        }
     }
+
 
     public void RemoveRoom(string roomId)
     {

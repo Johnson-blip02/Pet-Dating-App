@@ -1,34 +1,42 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getCookie, deleteCookie } from "../../utils/cookies";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { deleteCookie, getCookie } from "../../utils/cookies";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../contexts/AuthContext";
+import { logoutUser } from "../../utils/logout";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [hasPetProfile, setHasPetProfile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const { accountId, setAccountId } = useAuth();
+
+  const [hasPetProfile, setHasPetProfile] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Check both accountId and petProfileId for more reliable auth state
-    const accountExists = !!getCookie("accountId");
     const petProfileExists = !!getCookie("petProfileId");
-    setIsLoggedIn(accountExists);
     setHasPetProfile(petProfileExists);
-  }, [location]);
+
+    // Check if user is admin
+    const currentAccountId = getCookie("accountId");
+    if (currentAccountId) {
+      fetch(`http://localhost:5074/api/accounts/${currentAccountId}`)
+        .then((res) => res.json())
+        .then((account) => {
+          setIsAdmin(account.role === "Admin");
+        })
+        .catch(() => setIsAdmin(false));
+    } else {
+      setIsAdmin(false);
+    }
+  }, [location, accountId]);
 
   const handleLogout = () => {
-    // Delete all auth-related cookies
-    deleteCookie("accountId");
-    deleteCookie("petProfileId");
-
-    // Clear localStorage if used
-    localStorage.removeItem("accountId");
-    localStorage.removeItem("petProfileId");
-
-    // Update state and redirect
-    setIsLoggedIn(false);
+    logoutUser(setAccountId);
+    setIsAdmin(false);
     navigate("/");
   };
+
+  const isLoggedIn = !!accountId;
 
   return (
     <header style={{ backgroundColor: "#F79B72" }} className="shadow">
@@ -38,7 +46,7 @@ export default function Header() {
           <Link to="/">PetMatch</Link>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation */}
         <nav className="hidden md:flex space-x-6">
           {isLoggedIn && hasPetProfile && (
             <>
@@ -58,6 +66,11 @@ export default function Header() {
                 Messenger
               </Link>
             </>
+          )}
+          {isAdmin && (
+            <Link to="/admin" className="text-gray-600 hover:text-gray-900">
+              Admin
+            </Link>
           )}
           <Link to="/help" className="text-gray-600 hover:text-gray-900">
             Help

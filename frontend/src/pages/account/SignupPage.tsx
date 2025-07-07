@@ -1,10 +1,10 @@
-// src/pages/account/Signup.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { useAuth } from "../../contexts/AuthContext";
 import { setCookie } from "../../utils/cookies";
+import InputField from "../../components/form/InputField";
 
 interface ErrorResponse {
   message?: string;
@@ -13,27 +13,27 @@ interface ErrorResponse {
 export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
   const { setAccountId } = useAuth();
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsProcessing(true);
     setError("");
 
     // Client-side validation
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-      setIsLoading(false);
+      setIsProcessing(false);
       return;
     }
 
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
-      setIsLoading(false);
+      setIsProcessing(false);
       return;
     }
 
@@ -44,32 +44,43 @@ export default function SignupPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) {
+      if (res.ok) {
+        const data = await res.json();
+        setCookie("accountId", data.id);
+        localStorage.setItem("accountId", data.id);
+        setAccountId(data.id);
+        navigate("/profile-creation");
+        // isProcessing remains true during navigation
+      } else {
+        // Handle API errors
         let errorData: ErrorResponse = {};
         try {
           errorData = await res.json();
         } catch (parseError) {
           console.error("Failed to parse error response:", parseError);
         }
-        throw new Error(errorData.message || "Registration failed");
+        setError(errorData.message || "Registration failed");
+        setIsProcessing(false);
       }
-
-      const data = await res.json();
-      setCookie("accountId", data.id);
-      localStorage.setItem("accountId", data.id);
-      setAccountId(data.id);
-      navigate("/profile-creation");
     } catch (err) {
+      // Handle network errors
       console.error("Signup error:", err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
+      setIsProcessing(false);
     }
   };
+
+  // // Loading screen overlay
+  // if (isProcessing) {
+  //   return (
+  //     <div className="fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
+  //       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
+  //       <p className="mt-4 text-lg font-medium">Creating your account...</p>
+  //     </div>
+  //   );
+  // }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -84,60 +95,42 @@ export default function SignupPage() {
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
-          <div>
-            <label htmlFor="email" className="block mb-1 font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              className="w-full border p-2 rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          <InputField
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-          <div>
-            <label htmlFor="password" className="block mb-1 font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Create a password (min 6 characters)"
-              className="w-full border p-2 rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+          <InputField
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="Create a password (min 6 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-          {/* Password Confirmation Field */}
-          <div>
-            <label htmlFor="confirmPassword" className="block mb-1 font-medium">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Re-enter your password"
-              className="w-full border p-2 rounded"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+          <InputField
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            placeholder="Re-enter your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
 
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-            disabled={isLoading}
+            disabled={isProcessing}
           >
-            {isLoading ? "Registering..." : "Register"}
+            Register
           </button>
         </form>
       </main>

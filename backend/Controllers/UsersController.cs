@@ -51,6 +51,13 @@ namespace backend.Controllers
             return Ok(new { users, totalCount });
         }
 
+        [HttpGet("all")]
+        public ActionResult<List<User>> GetAllUsers()
+        {
+            var users = _userService.GetCollection().Find(_ => true).ToList();
+            return Ok(users);
+        }
+
         [HttpGet("{id}")]
         public ActionResult<User> Get(string id)
         {
@@ -122,11 +129,18 @@ namespace backend.Controllers
 
         #region DeleteMethods
         [HttpDelete("{id}")]
-        public IActionResult Delete(string id)
+        public async Task<IActionResult> Delete(string id)
         {
             var user = _userService.Get(id);
             if (user == null) return NotFound();
-            _userService.Remove(id);
+
+            // Delete all chat messages involving the user
+            var deletedCount = await _chatService.DeleteAllMessagesByUserIdAsync(id);
+            Console.WriteLine($"Deleted {deletedCount} messages for user {id}");
+
+            // Delete the user itself
+            _userService.DeleteUser(id);
+
             return NoContent();
         }
         #endregion

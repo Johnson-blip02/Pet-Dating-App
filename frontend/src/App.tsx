@@ -10,6 +10,8 @@ import ChatRoomPage from "./pages/explore/ChatRoomPage";
 import HelpPage from "./pages/basic/HelpPage";
 import LoginPage from "./pages/account/LoginPage";
 import SignupPage from "./pages/account/SignupPage";
+import ProfileUpdatePage from "./pages/profile/ProfileUpdatePage";
+import AdminPage from "./pages/admin/AdminPage";
 
 export default function App() {
   return (
@@ -25,6 +27,8 @@ export default function App() {
       <Route path="/liked-profile" element={<LikedProfilePage />} />
       <Route path="/messenger" element={<MessengerPage />} />
       <Route path="/chat/:otherUserId" element={<ChatRoomPage />} />
+      <Route path="/profile-update/:id" element={<ProfileUpdatePage />} />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 }

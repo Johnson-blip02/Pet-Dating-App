@@ -3,6 +3,11 @@ import { useNavigate } from "react-router-dom";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { getCookie, setCookie } from "../../utils/cookies";
+import FeedbackMessage from "../../components/profileCreation/FeedbackMessage";
+import FormInput from "../../components/profileCreation/FormInput";
+import FormSelect from "../../components/profileCreation/FormSelect";
+import ImageUploader from "../../components/profileCreation/ImageUploader";
+import PreferencesCheckboxes from "../../components/profileCreation/PreferencesCheckboxes";
 
 export default function ProfileCreationPage() {
   type PetProfileForm = {
@@ -25,7 +30,8 @@ export default function ProfileCreationPage() {
 
   const [accountId, setAccountId] = useState("");
   const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [isProcessing, setIsProcessing] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -45,12 +51,14 @@ export default function ProfileCreationPage() {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePreferencesChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const selected = Array.from(
-      e.target.selectedOptions,
-      (option) => option.value
-    );
-    setForm((prev) => ({ ...prev, petPreferences: selected }));
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    setForm((prev) => ({
+      ...prev,
+      petPreferences: checked
+        ? [...prev.petPreferences, value]
+        : prev.petPreferences.filter((pref) => pref !== value),
+    }));
   };
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,11 +85,12 @@ export default function ProfileCreationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsProcessing(true);
     setError("");
+    setSuccessMessage("");
 
     try {
-      // Create pet profile
+      // Step 1: Create the pet profile
       const createRes = await fetch("http://localhost:5074/api/users", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -94,7 +103,7 @@ export default function ProfileCreationPage() {
 
       const newProfile = await createRes.json();
 
-      // Link profile to account
+      // Step 2: Link the profile to the account
       const linkRes = await fetch(
         `http://localhost:5074/api/accounts/${accountId}/link-profile`,
         {
@@ -104,93 +113,96 @@ export default function ProfileCreationPage() {
         }
       );
 
-      if (!linkRes.ok) {
+      if (linkRes.ok) {
+        // Success case - keep processing state during navigation
+        setCookie("petProfileId", newProfile.id);
+        setSuccessMessage("Pet profile created and linked!");
+        setTimeout(() => navigate("/explore"), 1500);
+      } else {
+        // Link failed case
         throw new Error("Failed to link profile");
       }
-
-      // Set petProfileId cookie using utility
-      setCookie("petProfileId", newProfile.id);
-
-      alert("Pet profile created and linked!");
-      navigate("/explore");
     } catch (err) {
+      // Error case - reset processing state
       console.error("Profile creation error:", err);
       setError(err instanceof Error ? err.message : "An error occurred");
-    } finally {
-      setIsLoading(false);
+      setIsProcessing(false);
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
-      <div className="max-w-xl mx-auto mt-10 p-6 bg-white rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">Set Up Your Pet Profile</h2>
-        {error && <div className="text-red-500 mb-4">{error}</div>}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            required
+      <main className="max-w-xl mx-auto mt-10 p-8 bg-gray-50 rounded-lg shadow-lg w-full">
+        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+          Set Up Your Pet Profile
+        </h2>
+
+        {error && <FeedbackMessage type="error" message={error} />}
+        {successMessage && (
+          <FeedbackMessage type="success" message={successMessage} />
+        )}
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <FormInput
+            id="userName"
+            label="Pet Name"
             type="text"
             name="userName"
-            placeholder="Pet Name"
-            className="w-full border p-2 rounded"
+            value={form.userName}
             onChange={handleChange}
-          />
-          <input
             required
+          />
+
+          <FormInput
+            id="age"
+            label="Age"
             type="number"
             name="age"
-            placeholder="Age"
-            className="w-full border p-2 rounded"
+            value={form.age}
             onChange={handleChange}
-          />
-          <select
             required
+          />
+
+          <FormSelect
+            id="petType"
+            label="Pet Type"
             name="petType"
-            className="w-full border p-2 rounded"
+            value={form.petType}
             onChange={handleChange}
-          >
-            <option value="">Select Pet Type</option>
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-          </select>
-          <select
-            multiple
-            name="petPreferences"
-            className="w-full border p-2 rounded"
-            onChange={handlePreferencesChange}
-          >
-            <option value="Dog">Dog</option>
-            <option value="Cat">Cat</option>
-            <option value="Rabbit">Rabbit</option>
-          </select>
-
-          <input
+            options={["Dog", "Cat"]}
             required
-            type="file"
-            accept="image/*"
-            className="w-full border p-2 rounded"
-            onChange={handleImageUpload}
           />
 
-          <input
-            required
+          <PreferencesCheckboxes
+            preferences={form.petPreferences}
+            onChange={handleCheckboxChange}
+          />
+
+          <ImageUploader
+            onUpload={handleImageUpload}
+            previewUrl={form.photoPath}
+          />
+
+          <FormInput
+            id="location"
+            label="Location"
             type="text"
             name="location"
-            placeholder="Location"
-            className="w-full border p-2 rounded"
+            value={form.location}
             onChange={handleChange}
+            required
           />
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-            disabled={isLoading}
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+            disabled={isProcessing}
           >
-            {isLoading ? "Creating Profile..." : "Submit"}
+            {isProcessing ? "Creating Profile..." : "Submit"}
           </button>
         </form>
-      </div>
+      </main>
       <Footer />
     </div>
   );

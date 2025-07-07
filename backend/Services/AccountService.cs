@@ -46,7 +46,7 @@ namespace backend.Services
         #endregion
 
         #region Delete
-        public void Delete(string id) =>
+        public DeleteResult DeleteAccount(string id) =>
             _accounts.DeleteOne(a => a.Id == id);
         #endregion
     }

@@ -7,23 +7,13 @@ namespace backend.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class ChatController : ControllerBase
+public class ChatController(ChatMessageService chatService, ChatWebSocketHandler wsHandler) : ControllerBase
 {
-    private readonly ChatMessageService _chatService;
-    private readonly ChatWebSocketHandler _wsHandler;
+    private readonly ChatMessageService _chatService = chatService;
+    private readonly ChatWebSocketHandler _wsHandler = wsHandler;
 
-    public ChatController(ChatMessageService chatService, ChatWebSocketHandler wsHandler)
-    {
-        _chatService = chatService;
-        _wsHandler = wsHandler;
-    }
-    public ChatController(ChatMessageService chatService)
-    {
-        _chatService = chatService;
-    }
-
-    #region GetMethods
-    [HttpGet("room/{roomId}")]
+  #region GetMethods
+  [HttpGet("room/{roomId}")]
     public async Task<ActionResult<List<ChatMessage>>> GetMessagesInRoom(string roomId)
     {
         var messages = await _chatService.GetMessagesInRoomAsync(roomId);
