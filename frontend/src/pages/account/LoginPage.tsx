@@ -1,17 +1,19 @@
+// src/pages/account/LoginPage.tsx
 import React, { useState } from "react";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
+import { useDispatch } from "react-redux"; // Import useDispatch from react-redux
+import { login, setPetProfileId } from "../../slices/authSlice"; // Import the login and setPetProfileId actions
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../../utils/cookies";
-import { useAuth } from "../../contexts/AuthContext";
-import InputField from "../../components/form/InputField"; // Reused here ✅
+import InputField from "../../components/form/InputField"; // Reused input component
+import Footer from "../../components/layout/Footer";
+import Header from "../../components/layout/Header";
 
 export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { setAccountId } = useAuth();
+  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,14 +37,18 @@ export default function LoginPage() {
 
       const account = await accountRes.json();
 
+      // Set cookies and localStorage for persistence across sessions
       setCookie("accountId", data.id);
       setCookie("petProfileId", account.petProfileId);
 
       localStorage.setItem("accountId", data.id);
       localStorage.setItem("petProfileId", account.petProfileId);
 
-      setAccountId(data.id);
-      navigate("/explore");
+      // Dispatch the login action to Redux to update the accountId in Redux store
+      dispatch(login(data.id)); // Set accountId in Redux
+      dispatch(setPetProfileId(account.petProfileId)); // Set petProfileId in Redux
+
+      navigate("/user-profile"); // Navigate to explore after login
     } catch (error) {
       console.error("Login error:", error);
       alert("Login failed. Please check your credentials and try again.");

@@ -1,23 +1,26 @@
-import { useState } from "react";
+// src/pages/account/SignupPage.tsx
+import React, { useState } from "react";
+import { useDispatch } from "react-redux"; // Import useDispatch to dispatch actions
+import { login, setPetProfileId } from "../../slices/authSlice"; // Import actions
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
-import { useAuth } from "../../contexts/AuthContext";
 import { setCookie } from "../../utils/cookies";
-import InputField from "../../components/form/InputField";
+import InputField from "../../components/form/InputField"; // Reused input component
+import Footer from "../../components/layout/Footer";
+import Header from "../../components/layout/Header";
 
+// Define the ErrorResponse interface
 interface ErrorResponse {
   message?: string;
 }
 
 export default function SignupPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { setAccountId } = useAuth();
+  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -48,12 +51,16 @@ export default function SignupPage() {
         const data = await res.json();
         setCookie("accountId", data.id);
         localStorage.setItem("accountId", data.id);
-        setAccountId(data.id);
+
+        // Dispatch Redux actions to set accountId and petProfileId
+        dispatch(login(data.id)); // Set accountId in Redux
+        dispatch(setPetProfileId(null)); // Set petProfileId as null (or set to an actual value once it's available)
+
         navigate("/profile-creation");
         // isProcessing remains true during navigation
       } else {
         // Handle API errors
-        let errorData: ErrorResponse = {};
+        let errorData: ErrorResponse = {}; // Define the errorData as ErrorResponse
         try {
           errorData = await res.json();
         } catch (parseError) {
@@ -71,16 +78,6 @@ export default function SignupPage() {
       setIsProcessing(false);
     }
   };
-
-  // // Loading screen overlay
-  // if (isProcessing) {
-  //   return (
-  //     <div className="fixed inset-0 bg-white bg-opacity-90 flex flex-col items-center justify-center z-50">
-  //       <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-blue-500"></div>
-  //       <p className="mt-4 text-lg font-medium">Creating your account...</p>
-  //     </div>
-  //   );
-  // }
 
   return (
     <div className="min-h-screen flex flex-col">

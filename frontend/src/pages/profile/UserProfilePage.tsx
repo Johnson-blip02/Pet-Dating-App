@@ -1,5 +1,8 @@
-import { useEffect, useState } from "react";
+// src/pages/profile/UserProfilePage.tsx
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux"; // Import useDispatch and useSelector from react-redux
+import type { RootState } from "../../store"; // Import RootState to access the Redux store
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import ProfileInfoCard from "../../components/cards/ProfileInfoCard";
@@ -14,8 +17,10 @@ export default function UserProfilePage() {
   const [petProfile, setPetProfile] = useState<PetProfile | null>(null);
   const [error, setError] = useState("");
 
+  // Access accountId from Redux store
+  const accountId = useSelector((state: RootState) => state.auth.accountId); // Get accountId from Redux store
+
   useEffect(() => {
-    const accountId = getCookie("accountId");
     if (!accountId) {
       navigate("/login");
       return;
@@ -25,22 +30,31 @@ export default function UserProfilePage() {
       .then((res) => res.json())
       .then((data) => {
         setAccount(data);
+
+        // Get petProfileId from cookies or from the fetched data
         const petProfileId = getCookie("petProfileId") || data.petProfileId;
+
+        // If petProfileId is null or empty, navigate to profile-creation
         if (!petProfileId) {
           navigate("/profile-creation");
-        } else {
-          fetch(`http://localhost:5074/api/users/${petProfileId}`)
-            .then((res) => res.json())
-            .then(setPetProfile)
-            .catch(() => setError("Failed to load pet profile"));
+          return; // Skip further execution if redirecting to profile-creation
         }
+
+        // Only fetch the pet profile if petProfileId exists
+        fetch(`http://localhost:5074/api/users/${petProfileId}`)
+          .then((res) => res.json())
+          .then(setPetProfile)
+          .catch(() => {
+            setError("Failed to load pet profile");
+            navigate("/profile-creation"); // Redirect to profile-creation in case of fetch failure
+          });
       })
       .catch(() => {
         setError("Failed to load account information");
         navigate("/login");
       })
       .finally(() => setLoading(false));
-  }, [navigate]);
+  }, [accountId, navigate]);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!account) return null;

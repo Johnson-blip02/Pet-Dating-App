@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../contexts/AuthContext";
-import { logoutUser } from "../../utils/logout";
+import { useDispatch } from "react-redux";
+import { logoutUser } from "../../utils/logout"; // Import logoutUser
 
 interface DeleteButtonProps {
   accountId: string;
@@ -12,7 +12,7 @@ export default function DeleteButton({
   onDeleteSuccess,
 }: DeleteButtonProps) {
   const navigate = useNavigate();
-  const { setAccountId } = useAuth();
+  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
 
   const handleDelete = async () => {
     const confirm = window.confirm(
@@ -36,7 +36,7 @@ export default function DeleteButton({
 
       if (res.ok) {
         // Unified logout logic
-        logoutUser(setAccountId);
+        logoutUser(dispatch); // Dispatch logout to reset Redux and clear cookies
 
         // Optional callback
         if (onDeleteSuccess) onDeleteSuccess();

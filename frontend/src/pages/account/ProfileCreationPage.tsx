@@ -1,13 +1,16 @@
+// src/pages/profile/ProfileCreationPage.tsx
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
+import { useDispatch } from "react-redux"; // Import useDispatch to trigger actions
+import { setPetProfileId } from "../../slices/authSlice"; // Import setPetProfileId action
 import { getCookie, setCookie } from "../../utils/cookies";
 import FeedbackMessage from "../../components/profileCreation/FeedbackMessage";
 import FormInput from "../../components/profileCreation/FormInput";
 import FormSelect from "../../components/profileCreation/FormSelect";
 import ImageUploader from "../../components/profileCreation/ImageUploader";
 import PreferencesCheckboxes from "../../components/profileCreation/PreferencesCheckboxes";
+import Footer from "../../components/layout/Footer";
+import Header from "../../components/layout/Header";
 
 export default function ProfileCreationPage() {
   type PetProfileForm = {
@@ -28,11 +31,12 @@ export default function ProfileCreationPage() {
     location: "",
   });
 
-  const [accountId, setAccountId] = useState("");
-  const [error, setError] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [accountId, setAccountId] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [successMessage, setSuccessMessage] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const cookieId = getCookie("accountId");
@@ -117,7 +121,11 @@ export default function ProfileCreationPage() {
         // Success case - keep processing state during navigation
         setCookie("petProfileId", newProfile.id);
         setSuccessMessage("Pet profile created and linked!");
-        setTimeout(() => navigate("/explore"), 1500);
+
+        // Dispatch to Redux
+        dispatch(setPetProfileId(newProfile.id));
+
+        setTimeout(() => navigate("/explore"), 1500); // Redirect to explore after success
       } else {
         // Link failed case
         throw new Error("Failed to link profile");

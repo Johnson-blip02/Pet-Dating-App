@@ -1,22 +1,24 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
-import { deleteCookie, getCookie } from "../../utils/cookies";
-import { useEffect, useState } from "react";
-import { useAuth } from "../../contexts/AuthContext";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { logout } from "../../slices/authSlice";
+import { getCookie, deleteCookie } from "../../utils/cookies";
 import { logoutUser } from "../../utils/logout";
+import type { RootState } from "../../store";
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { accountId, setAccountId } = useAuth();
+  const dispatch = useDispatch();
+  const accountId = useSelector((state: RootState) => state.auth.accountId);
+  const petProfileId = useSelector(
+    (state: RootState) => state.auth.petProfileId
+  );
 
-  const [hasPetProfile, setHasPetProfile] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const petProfileExists = !!getCookie("petProfileId");
-    setHasPetProfile(petProfileExists);
-
-    // Check if user is admin
+    console.log("Auth check running - current cookies:", document.cookie);
     const currentAccountId = getCookie("accountId");
     if (currentAccountId) {
       fetch(`http://localhost:5074/api/accounts/${currentAccountId}`)
@@ -24,19 +26,24 @@ export default function Header() {
         .then((account) => {
           setIsAdmin(account.role === "Admin");
         })
-        .catch(() => setIsAdmin(false));
+        .catch((err) => {
+          console.error("Admin check failed:", err);
+          setIsAdmin(false);
+        });
     } else {
       setIsAdmin(false);
     }
-  }, [location, accountId]);
+  }, [location]);
 
   const handleLogout = () => {
-    logoutUser(setAccountId);
+    console.log("Logout initiated");
+    logoutUser(dispatch); // Using the centralized logout function
     setIsAdmin(false);
-    navigate("/");
+    navigate("/"); // Navigate to home page
   };
 
   const isLoggedIn = !!accountId;
+  const isProfileComplete = !!petProfileId;
 
   return (
     <header style={{ backgroundColor: "#F79B72" }} className="shadow">
@@ -48,7 +55,7 @@ export default function Header() {
 
         {/* Navigation */}
         <nav className="hidden md:flex space-x-6">
-          {isLoggedIn && hasPetProfile && (
+          {isLoggedIn && isProfileComplete && (
             <>
               <Link to="/explore" className="text-gray-600 hover:text-gray-900">
                 Explore
