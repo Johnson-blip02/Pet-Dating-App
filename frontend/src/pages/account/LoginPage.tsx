@@ -48,7 +48,7 @@ export default function LoginPage() {
       dispatch(login(data.id)); // Set accountId in Redux
       dispatch(setPetProfileId(account.petProfileId)); // Set petProfileId in Redux
 
-      navigate("/user-profile"); // Navigate to explore after login
+      navigate("/"); // Navigate to home after login
     } catch (error) {
       console.error("Login error:", error);
       alert("Login failed. Please check your credentials and try again.");

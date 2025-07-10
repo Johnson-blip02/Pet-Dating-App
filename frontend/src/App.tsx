@@ -41,10 +41,7 @@ export default function App() {
       <Route path="/explore" element={<ExplorePage />} />
       <Route path="/profile/:id" element={<PetProfilePage />} />
       <Route path="/profile-creation" element={<ProfileCreation />} />
-      <Route
-        path="/user-profile"
-        element={accountId ? <UserProfilePage /> : <Navigate to="/login" />}
-      />
+      <Route path="/user-profile" element={<UserProfilePage />} />
       <Route
         path="/liked-profile"
         element={accountId ? <LikedProfilePage /> : <Navigate to="/login" />}
@@ -61,10 +58,7 @@ export default function App() {
         path="/profile-update/:id"
         element={accountId ? <ProfileUpdatePage /> : <Navigate to="/login" />}
       />
-      <Route
-        path="/admin"
-        element={accountId ? <AdminPage /> : <Navigate to="/login" />}
-      />
+      <Route path="/admin" element={<AdminPage />} />
     </Routes>
   );
 }

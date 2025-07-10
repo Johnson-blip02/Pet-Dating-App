@@ -33,6 +33,10 @@
       "PackagePath": "staticwebassets\\images\\3759c93e-45a2-4d00-aa23-ce7d779d272e.jpg"
     },
     {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\37612563-ecbf-4a13-a2dd-030422f022d0.jpg",
+      "PackagePath": "staticwebassets\\images\\37612563-ecbf-4a13-a2dd-030422f022d0.jpg"
+    },
+    {
       "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\3ac0bcfb-72dd-4676-906d-1493171c5cb4.jpg",
       "PackagePath": "staticwebassets\\images\\3ac0bcfb-72dd-4676-906d-1493171c5cb4.jpg"
     },
@@ -101,6 +105,10 @@
       "PackagePath": "staticwebassets\\images\\88f3fc22-e3dd-4062-8e20-91b39e36a9af.jpg"
     },
     {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\9b78f036-efd8-4d44-ac91-4915458f6b1a.jpg",
+      "PackagePath": "staticwebassets\\images\\9b78f036-efd8-4d44-ac91-4915458f6b1a.jpg"
+    },
+    {
       "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\ba05eb1f-f0b2-43bf-92e4-0fd67055d119.jpg",
       "PackagePath": "staticwebassets\\images\\ba05eb1f-f0b2-43bf-92e4-0fd67055d119.jpg"
     },
@@ -167,6 +175,18 @@
     {
       "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\e25d864f-122b-4c5f-83c8-e5699f3e9ad4.jpg",
       "PackagePath": "staticwebassets\\images\\e25d864f-122b-4c5f-83c8-e5699f3e9ad4.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\f5658bfa-24e1-4bbf-a645-3a0050c16d9f.jpg",
+      "PackagePath": "staticwebassets\\images\\f5658bfa-24e1-4bbf-a645-3a0050c16d9f.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\f975019d-1e9e-42ca-bb8e-54119ae934e9.jpg",
+      "PackagePath": "staticwebassets\\images\\f975019d-1e9e-42ca-bb8e-54119ae934e9.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Johnson\\Downloads\\pet-dating-app\\backend\\wwwroot\\images\\fe8e2431-1c62-43df-b1da-4f2635058af1.jpg",
+      "PackagePath": "staticwebassets\\images\\fe8e2431-1c62-43df-b1da-4f2635058af1.jpg"
     },
     {
       "Id": "obj\\Debug\\net9.0\\staticwebassets\\msbuild.backend.Microsoft.AspNetCore.StaticWebAssetEndpoints.props",

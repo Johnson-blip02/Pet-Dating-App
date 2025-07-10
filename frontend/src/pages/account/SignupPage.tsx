@@ -41,6 +41,26 @@ export default function SignupPage() {
     }
 
     try {
+      // First, check if the email is already registered
+      const emailCheckRes = await fetch(
+        `http://localhost:5074/api/accounts/email/${email}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!emailCheckRes.ok) {
+        // If email is already registered, alert the user
+        const emailCheckData = await emailCheckRes.json();
+        if (emailCheckData.message === "Email already registered.") {
+          setError("This email is already in use. Please choose another.");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // Proceed with the registration
       const res = await fetch("http://localhost:5074/api/accounts/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -57,7 +77,6 @@ export default function SignupPage() {
         dispatch(setPetProfileId(null)); // Set petProfileId as null (or set to an actual value once it's available)
 
         navigate("/profile-creation");
-        // isProcessing remains true during navigation
       } else {
         // Handle API errors
         let errorData: ErrorResponse = {}; // Define the errorData as ErrorResponse

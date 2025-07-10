@@ -4,7 +4,7 @@ import { getCookie } from "../../utils/cookies";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import UpdateButton from "../../components/buttons/UpdateButton";
-import DeleteButton from "../../components/buttons/DeleteButton";
+import AdminDeleteButton from "../../components/buttons/AdminDeleteButton";
 
 export default function AdminPage() {
   const [users, setUsers] = useState([]);
@@ -18,20 +18,31 @@ export default function AdminPage() {
     }
 
     const fetchUsers = async () => {
-      // Get petProfileId of current account
-      const resAccount = await fetch(
-        `http://localhost:5074/api/accounts/${accountId}`
-      );
-      const account = await resAccount.json();
-      const petProfileId = account.petProfileId;
+      try {
+        // Get current account details
+        const resAccount = await fetch(
+          `http://localhost:5074/api/accounts/${accountId}`
+        );
+        const account = await resAccount.json();
 
-      // Fetch all users
-      const resUsers = await fetch("http://localhost:5074/api/users/all");
-      const allUsers = await resUsers.json();
+        if (account.role !== "Admin") {
+          navigate("/"); // Redirect if the user is not an admin
+          return;
+        }
 
-      // Filter out the current user's pet profile
-      const filtered = allUsers.filter((u: any) => u.id !== petProfileId);
-      setUsers(filtered);
+        const petProfileId = account.petProfileId;
+
+        // Fetch all users
+        const resUsers = await fetch("http://localhost:5074/api/users/all");
+        const allUsers = await resUsers.json();
+
+        // Filter out the current user's pet profile
+        const filtered = allUsers.filter((u: any) => u.id !== petProfileId);
+        setUsers(filtered);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        navigate("/"); // Redirect on error
+      }
     };
 
     fetchUsers();
@@ -69,7 +80,7 @@ export default function AdminPage() {
                   <td className="p-2 border w-40 whitespace-nowrap">
                     <div className="flex gap-2 justify-center">
                       <UpdateButton petProfileId={user.id} />
-                      <DeleteButton accountId={user.id} />
+                      <AdminDeleteButton userId={user.id} />
                     </div>
                   </td>
                 </tr>

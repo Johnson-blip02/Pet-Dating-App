@@ -1,23 +1,28 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setLikedUsers, setLikedByUsers } from "../../slices/likeSlice"; // Import Redux actions
+import { getCookie } from "../../utils/cookies";
+import PetCard from "../../components/cards/PetCard";
 import Footer from "../../components/layout/Footer";
 import Header from "../../components/layout/Header";
-import { getCookie } from "../../utils/cookies";
+import type { RootState } from "../../store"; // Import RootState to access the Redux state
 import type { PetProfile } from "../../types/petProfile";
-import PetCard from "../../components/cards/PetCard";
 
 export default function LikedProfilePage() {
-  const [profile, setProfile] = useState<PetProfile | null>(null);
-  const [likedUsers, setLikedUsers] = useState<PetProfile[]>([]);
-  const [likedByUsers, setLikedByUsers] = useState<PetProfile[]>([]);
-  const [loading, setLoading] = useState(true);
+  const dispatch = useDispatch();
+  const likedUsers = useSelector((state: RootState) => state.like.likedUsers); // Get liked users from Redux store
+  const likedByUsers = useSelector(
+    (state: RootState) => state.like.likedByUsers
+  ); // Get liked by users from Redux store
+  const accountId = getCookie("accountId");
 
   useEffect(() => {
-    const accountId = getCookie("accountId");
     if (!accountId) {
       alert("You must be logged in.");
       return;
     }
 
+    // Fetch account data to retrieve petProfileId
     fetch(`http://localhost:5074/api/accounts/${accountId}`)
       .then((res) => res.json())
       .then((account) => {
@@ -26,47 +31,43 @@ export default function LikedProfilePage() {
           return;
         }
 
+        // Fetch pet profile data
         fetch(`http://localhost:5074/api/users/${account.petProfileId}`)
           .then((res) => res.json())
-          .then(async (profileData) => {
-            setProfile(profileData);
-
-            const fetchUserSafe = async (
-              id: string
-            ): Promise<PetProfile | null> => {
-              try {
+          .then(async (profileData: PetProfile) => {
+            // Function to fetch user profiles by userIds
+            const fetchUserProfiles = async (ids: string[]) => {
+              const userProfiles: PetProfile[] = [];
+              for (const id of ids) {
                 const res = await fetch(
                   `http://localhost:5074/api/users/${id}`
                 );
-                if (!res.ok) return null;
-                return await res.json();
-              } catch {
-                return null;
+                if (res.ok) {
+                  const user = await res.json();
+                  userProfiles.push(user);
+                }
               }
+              return userProfiles;
             };
 
-            const likedRaw = await Promise.all(
-              profileData.likedUserIds.map(fetchUserSafe)
+            // Fetch the full user data for liked users and liked-by users
+            const likedUserProfiles = await fetchUserProfiles(
+              profileData.likedUserIds
             );
-            const likedByRaw = await Promise.all(
-              profileData.likedByUserIds.map(fetchUserSafe)
-            );
-
-            const liked = likedRaw.filter((u): u is PetProfile => u !== null);
-            const likedBy = likedByRaw.filter(
-              (u): u is PetProfile => u !== null
+            const likedByUserProfiles = await fetchUserProfiles(
+              profileData.likedByUserIds
             );
 
-            setLikedUsers(liked);
-            setLikedByUsers(likedBy);
+            // Dispatch Redux actions to store liked and liked-by users in the Redux store
+            dispatch(setLikedUsers(likedUserProfiles)); // Dispatch liked users
+            dispatch(setLikedByUsers(likedByUserProfiles)); // Dispatch liked by users
           })
-          .catch(console.error)
-          .finally(() => setLoading(false));
+          .catch(console.error);
       });
-  }, []);
+  }, [accountId, dispatch]);
 
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
-  if (!profile) return <p className="text-center mt-10">Profile not found.</p>;
+  if (!likedUsers || !likedByUsers)
+    return <p className="text-center mt-10">Loading...</p>;
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -80,7 +81,7 @@ export default function LikedProfilePage() {
             <h3 className="text-xl font-semibold mb-4">Liked Profiles</h3>
             {likedUsers.length > 0 ? (
               <div className="flex flex-wrap gap-4">
-                {likedUsers.map((user) => (
+                {likedUsers.map((user: PetProfile) => (
                   <PetCard key={user.id} {...user} />
                 ))}
               </div>
@@ -96,7 +97,7 @@ export default function LikedProfilePage() {
             <h3 className="text-xl font-semibold mb-4">Who Liked You</h3>
             {likedByUsers.length > 0 ? (
               <div className="flex flex-wrap gap-4">
-                {likedByUsers.map((user) => (
+                {likedByUsers.map((user: PetProfile) => (
                   <PetCard key={user.id} {...user} />
                 ))}
               </div>

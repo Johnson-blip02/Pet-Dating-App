@@ -1,10 +1,16 @@
 // src/store.ts
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./slices/authSlice"; // Changed from named import to default import
+import authReducer from "./slices/authSlice";
+import profileReducer from "./slices/profileSlice";
+import likeReducer from "./slices/likeSlice";
+import chatReducer from "./slices/chatSlice";
 
 export const store = configureStore({
   reducer: {
     auth: authReducer,
+    profile: profileReducer,
+    like: likeReducer,
+    chat: chatReducer,
   },
 });
 

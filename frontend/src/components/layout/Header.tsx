@@ -1,8 +1,7 @@
 import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect } from "react";
-import { logout } from "../../slices/authSlice";
-import { getCookie, deleteCookie } from "../../utils/cookies";
+import { getCookie } from "../../utils/cookies";
 import { logoutUser } from "../../utils/logout";
 import type { RootState } from "../../store";
 
@@ -19,8 +18,13 @@ export default function Header() {
 
   useEffect(() => {
     console.log("Auth check running - current cookies:", document.cookie);
+
     const currentAccountId = getCookie("accountId");
-    if (currentAccountId) {
+    const currentPetProfileId = getCookie("petProfileId");
+
+    // Check if the accountId and petProfileId exist in the cookies
+    if (currentAccountId && currentPetProfileId) {
+      // If both accountId and petProfileId exist, fetch account details
       fetch(`http://localhost:5074/api/accounts/${currentAccountId}`)
         .then((res) => res.json())
         .then((account) => {
@@ -31,9 +35,17 @@ export default function Header() {
           setIsAdmin(false);
         });
     } else {
-      setIsAdmin(false);
+      setIsAdmin(false); // If cookies are missing, set isAdmin to false
     }
-  }, [location]);
+
+    // Dispatch accountId and petProfileId to Redux if present in cookies
+    if (currentAccountId) {
+      dispatch({ type: "auth/setAccountId", payload: currentAccountId });
+    }
+    if (currentPetProfileId) {
+      dispatch({ type: "auth/setPetProfileId", payload: currentPetProfileId });
+    }
+  }, [location, dispatch]);
 
   const handleLogout = () => {
     console.log("Logout initiated");

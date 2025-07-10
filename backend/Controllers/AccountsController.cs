@@ -45,6 +45,13 @@ namespace backend.Controllers
         #endregion
 
         #region Get / Delete
+        // GET /api/accounts
+        [HttpGet]
+        public IActionResult GetAll()
+        {
+            var accounts = _accountService.Get(); // Fetch all accounts from AccountService
+            return Ok(accounts); // Return the list of accounts
+        }
 
         // GET /api/accounts/{id}
         [HttpGet("{id}")]
@@ -52,6 +59,31 @@ namespace backend.Controllers
         {
             var account = _accountService.GetById(id);
             return account == null ? NotFound() : Ok(account);
+        }
+
+        // GET /api/accounts/user/{userId}
+        [HttpGet("user/{userId}")]
+        public IActionResult GetAccountIdByUserId(string userId)
+        {
+            var account = _accountService.GetByUserId(userId); // Call GetByUserId from AccountService
+            if (account == null)
+            {
+                return NotFound(new { message = "Account not found" }); // Return a clear error message
+            }
+            return Ok(new { Id = account.Id }); // Return accountId in JSON format
+        }
+
+        // GET /api/accounts/email/{email}
+        [HttpGet("email/{email}")]
+        public IActionResult CheckEmailExists(string email)
+        {
+            var account = _accountService.GetByEmail(email); // Check if the email exists
+            if (account != null)
+            {
+                return BadRequest(new { message = "Email already registered." }); // Return an error if the email is found
+            }
+
+            return Ok(); // Return 200 OK if email is available
         }
 
         // DELETE /api/accounts/{id}

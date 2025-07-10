@@ -1,6 +1,8 @@
 using backend.Models;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
+using MongoDB.Bson; // This imports ObjectId
+
 
 namespace backend.Services
 {
@@ -30,11 +32,43 @@ namespace backend.Services
         public List<Account> Get() =>
             _accounts.Find(_ => true).ToList();
 
-        public Account? GetById(string id) =>
-            _accounts.Find(a => a.Id == id).FirstOrDefault();
+        public Account? GetById(string id)
+        {
+            try
+            {
+                // Convert the string id to ObjectId
+                var objectId = ObjectId.Parse(id); // Converts the string to ObjectId
+
+                // Find account by ObjectId
+                return _accounts.Find(a => a.Id == objectId.ToString()).FirstOrDefault();
+            }
+            catch (FormatException)
+            {
+                // If the id is not in valid ObjectId format, return null
+                return null;
+            }
+        }
 
         public Account? GetByEmail(string email) =>
             _accounts.Find(a => a.Email == email).FirstOrDefault();
+
+        public Account? GetByUserId(string userId)
+        {
+            try
+            {
+                // Convert userId to ObjectId if it's a valid MongoDB ID
+                var objectId = ObjectId.Parse(userId);
+
+                // Find the account where the pet profile matches the userId
+                return _accounts.Find(a => a.PetProfileId == userId || a.Id == objectId.ToString()).FirstOrDefault();
+            }
+            catch (FormatException)
+            {
+                // If it's not a valid ObjectId, return null
+                return null;
+            }
+        }
+
         #endregion
 
         #region Update
