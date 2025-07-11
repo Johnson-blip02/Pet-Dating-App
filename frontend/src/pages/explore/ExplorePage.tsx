@@ -59,12 +59,12 @@ export default function ExplorePage() {
   }, [filters, page]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
-      <div className="p-6">
+      <div className="p-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-bold mb-4">Explore Pets</h2>
 
-        {/* Fitler */}
+        {/* Filter */}
         <PetFilter filters={filters} setFilters={setFilters} />
 
         {/* Grid */}

@@ -7,15 +7,16 @@ import { store } from "./store"; // Import your store
 import App from "./App";
 import "./index.css";
 import { AuthProvider } from "./contexts/AuthContext";
+import ThemeProvider from "./providers/ThemeProvider";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <Provider store={store}>
-      {" "}
-      {/* Wrap your App with the Redux Provider */}
       <BrowserRouter>
         <AuthProvider>
-          <App />
+          <ThemeProvider>
+            <App />
+          </ThemeProvider>
         </AuthProvider>
       </BrowserRouter>
     </Provider>

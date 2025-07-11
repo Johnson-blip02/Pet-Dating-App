@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { getCookie } from "../../utils/cookies";
 import { logoutUser } from "../../utils/logout";
 import type { RootState } from "../../store";
+import ThemeToggle from "../buttons/ThemeToggle";
 
 export default function Header() {
   const navigate = useNavigate();
@@ -58,40 +59,50 @@ export default function Header() {
   const isProfileComplete = !!petProfileId;
 
   return (
-    <header style={{ backgroundColor: "#F79B72" }} className="shadow">
+    <header className="bg-light-accent dark:bg-dark-accent shadow">
       <div className="container mx-auto px-4 py-4 flex justify-between items-center">
         {/* Logo */}
-        <div className="text-xl font-bold text-gray-800">
+        <div className="flex items-center space-x-2 text-xl font-bold text-light-text dark:text-dark-text">
           <Link to="/">PetMatch</Link>
+          <ThemeToggle />
         </div>
 
         {/* Navigation */}
         <nav className="hidden md:flex space-x-6">
           {isLoggedIn && isProfileComplete && (
             <>
-              <Link to="/explore" className="text-gray-600 hover:text-gray-900">
+              <Link
+                to="/explore"
+                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+              >
                 Explore
               </Link>
               <Link
                 to="/liked-profile"
-                className="text-gray-600 hover:text-gray-900"
+                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
               >
                 Likes
               </Link>
               <Link
                 to="/messenger"
-                className="text-gray-600 hover:text-gray-900"
+                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
               >
                 Messenger
               </Link>
             </>
           )}
           {isAdmin && (
-            <Link to="/admin" className="text-gray-600 hover:text-gray-900">
+            <Link
+              to="/admin"
+              className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+            >
               Admin
             </Link>
           )}
-          <Link to="/help" className="text-gray-600 hover:text-gray-900">
+          <Link
+            to="/help"
+            className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+          >
             Help
           </Link>
         </nav>
@@ -102,13 +113,13 @@ export default function Header() {
             <>
               <Link
                 to="/user-profile"
-                className="text-gray-600 hover:text-gray-900"
+                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
               >
                 My Profile
               </Link>
               <button
                 onClick={handleLogout}
-                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                className="px-4 py-2 border border-light-text/30 dark:border-dark-text/30 rounded hover:bg-light-background/10 dark:hover:bg-dark-background/10 text-sm text-light-text dark:text-dark-text"
               >
                 Logout
               </button>
@@ -117,13 +128,13 @@ export default function Header() {
             <>
               <Link
                 to="/login"
-                className="px-4 py-2 border border-gray-300 rounded hover:bg-gray-100 text-sm"
+                className="px-4 py-2 border border-light-text/30 dark:border-dark-text/30 rounded hover:bg-light-background/10 dark:hover:bg-dark-background/10 text-sm text-light-text dark:text-dark-text"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 text-sm"
+                className="px-4 py-2 bg-light-text text-light-background rounded hover:bg-light-text/90 text-sm dark:bg-dark-text dark:text-dark-background dark:hover:bg-dark-text/90"
               >
                 Sign Up
               </Link>

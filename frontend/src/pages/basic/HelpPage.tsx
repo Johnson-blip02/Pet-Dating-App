@@ -3,7 +3,7 @@ import Header from "../../components/layout/Header";
 
 export default function HelpPage() {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
       <main className="flex-grow p-6 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-6">Help & Support</h1>
@@ -15,18 +15,18 @@ export default function HelpPage() {
           <ul className="space-y-4">
             <li>
               <p className="font-medium">How do I connect with other pets?</p>
-              <p className="text-gray-700">
+              <p>
                 Go to the login page and sign in, once completed click on the
                 explore in header.
               </p>
             </li>
             <li>
               <p className="font-medium">How do I contact support?</p>
-              <p className="text-gray-700">
+              <p>
                 Email us at{" "}
                 <a
                   href="mailto:support@petmatch.com"
-                  className="text-blue-600 underline"
+                  className="text-light-accent dark:text-dark-accent underline"
                 >
                   support@petmatch.com
                 </a>
@@ -35,7 +35,7 @@ export default function HelpPage() {
             </li>
             <li>
               <p className="font-medium">Why can't I see any matches?</p>
-              <p className="text-gray-700">
+              <p>
                 Try updating your location settings and make sure your profile
                 is complete.
               </p>
@@ -45,12 +45,12 @@ export default function HelpPage() {
 
         <section>
           <h2 className="text-xl font-semibold mb-2">Still need help?</h2>
-          <p className="text-gray-700">
+          <p>
             If you couldn’t find the answer you were looking for, reach out to
             us anytime at{" "}
             <a
               href="mailto:support@petmatch.com"
-              className="text-blue-600 underline"
+              className="text-light-accent dark:text-dark-accent underline"
             >
               support@petmatch.com
             </a>

@@ -139,10 +139,10 @@ export default function ProfileCreationPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
-      <main className="max-w-xl mx-auto mt-10 p-8 bg-gray-50 rounded-lg shadow-lg w-full">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
+      <main className="max-w-xl mx-auto mt-10 p-8 rounded-lg shadow-lg w-full bg-white dark:bg-gray-900">
+        <h2 className="text-3xl font-bold mb-6 text-center text-black dark:text-white">
           Set Up Your Pet Profile
         </h2>
 
@@ -204,7 +204,7 @@ export default function ProfileCreationPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-yellow-400 dark:bg-yellow-500 text-black dark:text-black py-2 rounded hover:bg-yellow-500 dark:hover:bg-yellow-600 transition disabled:opacity-50"
             disabled={isProcessing}
           >
             {isProcessing ? "Creating Profile..." : "Submit"}

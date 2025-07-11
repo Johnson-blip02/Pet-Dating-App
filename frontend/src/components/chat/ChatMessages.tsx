@@ -27,7 +27,7 @@ export default function ChatMessages({
   }
 
   return (
-    <div className="flex-grow overflow-y-auto bg-gray-100 p-4">
+    <div className="flex-grow overflow-y-auto bg-light-background dark:bg-dark-background p-4">
       {!isConnected && (
         <div className="bg-yellow-100 text-yellow-800 p-2 mb-2 rounded flex justify-between items-center">
           <span>Disconnected from chat</span>
@@ -42,15 +42,17 @@ export default function ChatMessages({
 
       <div className="space-y-2">
         {messages.length === 0 && (
-          <p className="text-center text-gray-500">Start the conversation!</p>
+          <p className="text-center text-gray-500 dark:text-gray-300">
+            Start the conversation!
+          </p>
         )}
         {messages.map((msg, i) => (
           <div
             key={msg.id || i}
             className={`max-w-[75%] p-2 rounded-lg ${
               msg.senderId === petProfileId
-                ? "bg-blue-500 text-white self-end ml-auto"
-                : "bg-gray-300 text-black self-start mr-auto"
+                ? "bg-light-accent text-light-text self-end ml-auto dark:bg-dark-accent dark:text-dark-text"
+                : "bg-light-background text-light-text self-start mr-auto dark:bg-dark-background dark:text-dark-text"
             }`}
           >
             <p className="text-sm">{msg.message}</p>

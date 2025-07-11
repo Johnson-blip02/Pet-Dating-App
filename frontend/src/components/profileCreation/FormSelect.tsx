@@ -19,7 +19,10 @@ export default function FormSelect({
 }: Props) {
   return (
     <div>
-      <label htmlFor={id} className="block mb-1 font-semibold">
+      <label
+        htmlFor={id}
+        className="block mb-1 font-semibold text-gray-800 dark:text-gray-200"
+      >
         {label}
       </label>
       <select
@@ -28,7 +31,7 @@ export default function FormSelect({
         value={value}
         onChange={onChange}
         required={required}
-        className="w-full border p-2 rounded"
+        className="w-full border border-yellow-400 p-2 rounded focus:outline-none focus:ring-2 focus:ring-yellow-400 transition"
       >
         <option value="">Select {label}</option>
         {options.map((opt) => (

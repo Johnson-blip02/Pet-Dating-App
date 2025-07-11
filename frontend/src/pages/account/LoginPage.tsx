@@ -58,11 +58,11 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
-      <main className="flex-grow flex items-center justify-center bg-gray-50 p-4">
-        <div className="max-w-md w-full bg-white p-8 rounded shadow">
-          <h2 className="text-2xl font-bold mb-6 text-center">
+      <main className="flex-grow flex items-center justify-center p-4">
+        <div className="max-w-md w-full bg-white dark:bg-gray-900 p-8 rounded shadow">
+          <h2 className="text-2xl font-bold mb-6 text-center text-black dark:text-white">
             Login to Your Account
           </h2>
 
@@ -90,7 +90,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className={`w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition ${
+              className={`w-full bg-yellow-400 dark:bg-yellow-500 text-black dark:text-black py-2 rounded hover:bg-yellow-500 dark:hover:bg-yellow-600 transition ${
                 isLoading ? "opacity-50 cursor-not-allowed" : ""
               }`}
             >

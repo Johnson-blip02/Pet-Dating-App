@@ -73,11 +73,13 @@ export default function UserProfilePage() {
   if (!userProfile || !petProfile) return null;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background text-light-text dark:bg-dark-background dark:text-dark-text">
       <Header />
-      <main className="flex-grow p-6 bg-gray-50">
+      <main className="flex-grow p-6 bg-light-muted dark:bg-dark-muted">
         <div className="max-w-xl mx-auto">
-          {error && <div className="text-red-500 mb-4">{error}</div>}
+          {error && (
+            <div className="text-red-600 dark:text-red-400 mb-4">{error}</div>
+          )}
           <ProfileInfoCard account={userProfile} petProfile={petProfile} />
         </div>
       </main>

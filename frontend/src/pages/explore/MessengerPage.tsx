@@ -48,7 +48,7 @@ export default function MessengerPage() {
   }, [petProfileId, dispatch]); // Only depend on petProfileId
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
 
       <main className="flex-grow p-4 max-w-2xl mx-auto">
@@ -65,7 +65,7 @@ export default function MessengerPage() {
               <div
                 key={user.id}
                 onClick={() => navigate(`/chat/${user.id}`)}
-                className="flex items-center gap-3 p-3 bg-white shadow rounded cursor-pointer hover:bg-blue-50"
+                className="flex items-center gap-3 p-3 bg-light-background dark:bg-dark-muted shadow rounded cursor-pointer hover:bg-light-accent/20 dark:hover:bg-dark-accent/20 transition-colors"
               >
                 <img
                   src={`http://localhost:5074/${user.photoPath.replace(
@@ -77,7 +77,9 @@ export default function MessengerPage() {
                 />
                 <div>
                   <p className="font-semibold">{user.userName}</p>
-                  <p className="text-sm text-gray-500">{user.location}</p>
+                  <p className="text-light-secondary-text dark:text-dark-secondary-text text-sm">
+                    {user.location}
+                  </p>
                 </div>
               </div>
             ))}

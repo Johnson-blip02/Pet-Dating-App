@@ -49,35 +49,54 @@ export default function AdminPage() {
   }, [accountId, navigate]);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
       <main className="p-6 flex-grow">
         <h1 className="text-2xl font-bold mb-6">Admin - Manage Users</h1>
         <div className="overflow-x-auto">
-          <table className="min-w-full border border-gray-300 text-sm">
-            <thead className="bg-gray-100">
+          <table className="min-w-full border border-gray-300 dark:border-gray-600 text-sm">
+            <thead className="bg-light-accent dark:bg-dark-accent text-black dark:text-white">
               <tr>
-                <th className="p-2 border">Username</th>
-                <th className="p-2 border">Pet Type</th>
-                <th className="p-2 border">Location</th>
-                <th className="p-2 border">Photo</th>
-                <th className="p-2 border w-40">Actions</th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Username
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Pet Type
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Location
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600">
+                  Photo
+                </th>
+                <th className="p-2 border border-gray-300 dark:border-gray-600 w-40">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {users.map((user: any) => (
-                <tr key={user.id} className="text-center">
-                  <td className="p-2 border">{user.userName}</td>
-                  <td className="p-2 border">{user.petType}</td>
-                  <td className="p-2 border">{user.location}</td>
-                  <td className="p-2 border">
+                <tr
+                  key={user.id}
+                  className="text-center border border-gray-300 dark:border-gray-600"
+                >
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.userName}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.petType}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
+                    {user.location}
+                  </td>
+                  <td className="p-2 border border-gray-300 dark:border-gray-600">
                     <img
                       src={`http://localhost:5074/${user.photoPath}`}
                       alt="pet"
                       className="w-12 h-12 object-cover mx-auto rounded"
                     />
                   </td>
-                  <td className="p-2 border w-40 whitespace-nowrap">
+                  <td className="p-2 border border-gray-300 dark:border-gray-600 w-40 whitespace-nowrap">
                     <div className="flex gap-2 justify-center">
                       <UpdateButton petProfileId={user.id} />
                       <AdminDeleteButton userId={user.id} />

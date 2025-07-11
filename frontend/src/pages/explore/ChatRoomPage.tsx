@@ -176,7 +176,7 @@ export default function ChatRoomPage() {
   if (!user) return null;
 
   return (
-    <div className="flex flex-col h-screen">
+    <div className="flex flex-col h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <ChatHeader user={user} />
       <ChatMessages
         messages={messages}
