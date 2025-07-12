@@ -1,34 +1,61 @@
-import { Link, useNavigate, useLocation } from "react-router-dom";
-import { getCookie, deleteCookie } from "../../utils/cookies";
-import { useEffect, useState } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { getCookie } from "../../utils/cookies";
+import { logoutUser } from "../../utils/logout";
+import type { RootState } from "../../store";
 
 export default function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [hasPetProfile, setHasPetProfile] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
+  const accountId = useSelector((state: RootState) => state.auth.accountId);
+  const petProfileId = useSelector(
+    (state: RootState) => state.auth.petProfileId
+  );
+
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Check both accountId and petProfileId for more reliable auth state
-    const accountExists = !!getCookie("accountId");
-    const petProfileExists = !!getCookie("petProfileId");
-    setIsLoggedIn(accountExists);
-    setHasPetProfile(petProfileExists);
-  }, [location]);
+    console.log("Auth check running - current cookies:", document.cookie);
+
+    const currentAccountId = getCookie("accountId");
+    const currentPetProfileId = getCookie("petProfileId");
+
+    // Check if the accountId and petProfileId exist in the cookies
+    if (currentAccountId && currentPetProfileId) {
+      // If both accountId and petProfileId exist, fetch account details
+      fetch(`http://localhost:5074/api/accounts/${currentAccountId}`)
+        .then((res) => res.json())
+        .then((account) => {
+          setIsAdmin(account.role === "Admin");
+        })
+        .catch((err) => {
+          console.error("Admin check failed:", err);
+          setIsAdmin(false);
+        });
+    } else {
+      setIsAdmin(false); // If cookies are missing, set isAdmin to false
+    }
+
+    // Dispatch accountId and petProfileId to Redux if present in cookies
+    if (currentAccountId) {
+      dispatch({ type: "auth/setAccountId", payload: currentAccountId });
+    }
+    if (currentPetProfileId) {
+      dispatch({ type: "auth/setPetProfileId", payload: currentPetProfileId });
+    }
+  }, [location, dispatch]);
 
   const handleLogout = () => {
-    // Delete all auth-related cookies
-    deleteCookie("accountId");
-    deleteCookie("petProfileId");
-
-    // Clear localStorage if used
-    localStorage.removeItem("accountId");
-    localStorage.removeItem("petProfileId");
-
-    // Update state and redirect
-    setIsLoggedIn(false);
-    navigate("/");
+    console.log("Logout initiated");
+    logoutUser(dispatch); // Using the centralized logout function
+    setIsAdmin(false);
+    navigate("/"); // Navigate to home page
   };
+
+  const isLoggedIn = !!accountId;
+  const isProfileComplete = !!petProfileId;
 
   return (
     <header style={{ backgroundColor: "#F79B72" }} className="shadow">
@@ -38,9 +65,9 @@ export default function Header() {
           <Link to="/">PetMatch</Link>
         </div>
 
-        {/* Navigation Links */}
+        {/* Navigation */}
         <nav className="hidden md:flex space-x-6">
-          {isLoggedIn && hasPetProfile && (
+          {isLoggedIn && isProfileComplete && (
             <>
               <Link to="/explore" className="text-gray-600 hover:text-gray-900">
                 Explore
@@ -58,6 +85,11 @@ export default function Header() {
                 Messenger
               </Link>
             </>
+          )}
+          {isAdmin && (
+            <Link to="/admin" className="text-gray-600 hover:text-gray-900">
+              Admin
+            </Link>
           )}
           <Link to="/help" className="text-gray-600 hover:text-gray-900">
             Help

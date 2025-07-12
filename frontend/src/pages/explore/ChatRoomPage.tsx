@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getCookie } from "../../utils/cookies";
 import useChatWebSocket from "../../hooks/useChatWebSocket";
 import type { ChatMessage } from "../../types/chatMessage";
-import { useNavigate } from "react-router-dom";
+import ChatHeader from "../../components/chat/ChatHeader";
+import ChatMessages from "../../components/chat/ChatMessages";
+import ChatInput from "../../components/chat/ChatInput";
 
 export default function ChatRoomPage() {
   const { otherUserId } = useParams<{ otherUserId: string }>();
@@ -11,22 +13,26 @@ export default function ChatRoomPage() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(true);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [user, setUser] = useState<any>(null);
+  const [userNotFound, setUserNotFound] = useState(false);
+  const [isUserDeleted, setIsUserDeleted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
 
+  // Ensure petProfileId and otherUserId are available
   if (!petProfileId || !otherUserId) {
     return <div>Missing user information</div>;
   }
 
   const roomId = `room_${[petProfileId, otherUserId].sort().join("_")}`;
 
-  // ✅ Message handler for incoming WebSocket messages
+  // Handle incoming messages
   const handleMessage = (msg: ChatMessage) => {
     if (msg.roomId !== roomId) return;
 
-    setMessages((prev) => {
-      const isResponseToTemp = prev.some(
+    // Update the messages state
+    setMessages((prevMessages) => {
+      const isResponseToTemp = prevMessages.some(
         (m) =>
           m.id?.startsWith("temp-") &&
           m.message === msg.message &&
@@ -35,21 +41,22 @@ export default function ChatRoomPage() {
 
       if (isResponseToTemp) {
         return [
-          ...prev.filter(
-            (m) => !m.id?.startsWith("temp-") || m.message !== msg.message
+          ...prevMessages.filter(
+            (m) => !(m.id?.startsWith("temp-") && m.message === msg.message)
           ),
           msg,
         ];
       }
 
-      if (!prev.some((m) => m.id === msg.id)) {
-        return [...prev, msg];
+      if (!prevMessages.some((m) => m.id === msg.id)) {
+        return [...prevMessages, msg];
       }
 
-      return prev;
+      return prevMessages;
     });
   };
 
+  // WebSocket hook
   const { sendMessage, isConnected, reconnect } = useChatWebSocket(
     "ws://localhost:5074/ws",
     petProfileId,
@@ -58,15 +65,40 @@ export default function ChatRoomPage() {
     handleMessage
   );
 
+  // Fetch user data
   useEffect(() => {
-    if (!otherUserId) return;
-    fetch(`http://localhost:5074/api/users/${otherUserId}`)
-      .then((res) => res.json())
-      .then((data) => setUser(data));
+    const fetchUser = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5074/api/users/${otherUserId}`
+        );
+        if (!res.ok) {
+          setUserNotFound(true);
+          setIsUserDeleted(true);
+          return;
+        }
+        const data = await res.json();
+        if (!data) {
+          setUserNotFound(true);
+          setIsUserDeleted(true);
+          return;
+        }
+        setUser(data);
+        setIsUserDeleted(false);
+      } catch (err) {
+        console.error("User fetch failed:", err);
+        setUserNotFound(true);
+        setIsUserDeleted(true);
+      }
+    };
+
+    if (otherUserId) fetchUser();
   }, [otherUserId]);
 
-  // Load initial message history
+  // Fetch chat history
   useEffect(() => {
+    if (isUserDeleted) return;
+
     setIsLoading(true);
     fetch(`http://localhost:5074/api/chat/room/${roomId}`)
       .then((res) => {
@@ -74,144 +106,94 @@ export default function ChatRoomPage() {
         return res.json();
       })
       .then((data) => {
-        if (Array.isArray(data)) {
-          setMessages(data);
-        } else {
-          setMessages([]);
-        }
+        setMessages(Array.isArray(data) ? data : []);
       })
       .catch((err) => {
         console.error("Error loading messages:", err);
         setMessages([]);
       })
       .finally(() => setIsLoading(false));
-  }, [roomId]);
+  }, [roomId, isUserDeleted]);
 
+  // Scroll to the bottom when new messages are added
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSend = () => {
-    if (!input.trim()) return;
+  // Send message handler
+  const handleSend = async () => {
+    if (!input.trim() || isUserDeleted || !isConnected) return;
 
-    const tempMessage: ChatMessage = {
-      id: `temp-${Date.now()}`,
-      senderId: petProfileId,
-      receiverId: otherUserId,
-      message: input.trim(),
-      roomId,
-      timestamp: new Date().toISOString(),
-    };
+    try {
+      const res = await fetch(`http://localhost:5074/api/users/${otherUserId}`);
+      if (!res.ok) {
+        setIsUserDeleted(true);
+        setUserNotFound(true);
+        return;
+      }
 
-    setMessages((prev) => [...prev, tempMessage]);
-    setInput("");
-    sendMessage(input.trim());
+      const tempMessage: ChatMessage = {
+        id: `temp-${Date.now()}`,
+        senderId: petProfileId,
+        receiverId: otherUserId,
+        message: input.trim(),
+        roomId,
+        timestamp: new Date().toISOString(),
+      };
+
+      setMessages((prev) => [...prev, tempMessage]);
+      setInput("");
+      sendMessage(input.trim());
+    } catch (err) {
+      console.error("Error sending message:", err);
+    }
   };
 
+  // Handle key press (Enter key to send message)
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSend();
   };
 
-  return (
-    <div className="flex flex-col h-screen">
-      {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b shadow-sm bg-white sticky top-0 z-10">
-        {/* Back button */}
-        <button
-          onClick={() => navigate("/messenger")}
-          className="flex items-center text-gray-700 hover:text-gray-900"
-          aria-label="Back to Messenger"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={1.5}
-            stroke="currentColor"
-            className="h-6 w-6"
+  // Show error page if user not found or deleted
+  if (userNotFound || isUserDeleted) {
+    return (
+      <div className="flex items-center justify-center h-screen text-center p-4">
+        <div>
+          <p className="text-xl font-semibold text-red-600">
+            The user you're trying to chat with no longer exists.
+          </p>
+          <button
+            className="mt-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            onClick={() => navigate("/messenger")}
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M9 15 3 9m0 0 6-6M3 9h12a6 6 0 0 1 0 12h-3"
-            />
-          </svg>
-        </button>
-
-        {/* User info */}
-        <div className="flex items-center gap-3">
-          <img
-            src={`http://localhost:5074/${user?.photoPath}`}
-            alt={user?.userName}
-            className="h-10 w-10 rounded-full object-cover border"
-          />
-          <span className="font-semibold text-gray-800">{user?.userName}</span>
+            Go Back to Messenger
+          </button>
         </div>
       </div>
+    );
+  }
 
-      {/* Main chat area */}
-      <div className="flex-grow overflow-y-auto bg-gray-100 p-4">
-        {!isConnected && (
-          <div className="bg-yellow-100 text-yellow-800 p-2 mb-2 rounded flex justify-between items-center">
-            <span>Disconnected from chat</span>
-            <button
-              onClick={reconnect}
-              className="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600"
-            >
-              Reconnect
-            </button>
-          </div>
-        )}
+  if (!user) return null;
 
-        {isLoading ? (
-          <div className="flex-grow flex items-center justify-center">
-            <p>Loading messages...</p>
-          </div>
-        ) : (
-          <div className="flex-grow overflow-y-auto space-y-2 bg-gray-100 p-4 rounded">
-            {messages.length === 0 && (
-              <p className="text-center text-gray-500">
-                Start the conversation!
-              </p>
-            )}
-            {messages.map((msg, i) => (
-              <div
-                key={msg.id || i}
-                className={`max-w-[75%] p-2 rounded-lg ${
-                  msg.senderId === petProfileId
-                    ? "bg-blue-500 text-white self-end ml-auto"
-                    : "bg-gray-300 text-black self-start mr-auto"
-                }`}
-              >
-                <p className="text-sm">{msg.message}</p>
-                <p className="text-xs text-right opacity-70">
-                  {new Date(msg.timestamp).toLocaleTimeString()}
-                </p>
-              </div>
-            ))}
-            <div ref={bottomRef} />
-          </div>
-        )}
-      </div>
-
-      {/* Input box at bottom */}
-      <div className="flex gap-2 mt-4">
-        <input
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={handleKeyPress}
-          placeholder={isConnected ? "Type a message" : "Connecting..."}
-          className="flex-grow border rounded p-2 disabled:opacity-50"
-          disabled={!isConnected || isLoading}
-        />
-        <button
-          onClick={handleSend}
-          className="bg-blue-600 text-white px-4 rounded hover:bg-blue-700 disabled:opacity-50"
-          disabled={!isConnected || isLoading}
-        >
-          Send
-        </button>
-      </div>
+  return (
+    <div className="flex flex-col h-screen">
+      <ChatHeader user={user} />
+      <ChatMessages
+        messages={messages}
+        petProfileId={petProfileId}
+        isConnected={isConnected}
+        isLoading={isLoading}
+        reconnect={reconnect}
+        bottomRef={bottomRef}
+      />
+      <ChatInput
+        input={input}
+        setInput={setInput}
+        handleSend={handleSend}
+        isDisabled={!isConnected || isLoading || isUserDeleted}
+        onKeyPress={handleKeyPress}
+        placeholder={isUserDeleted ? "User no longer exists" : "Type a message"}
+      />
     </div>
   );
 }

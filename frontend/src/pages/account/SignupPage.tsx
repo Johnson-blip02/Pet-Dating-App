@@ -1,73 +1,100 @@
-// src/pages/account/Signup.tsx
-import { useState } from "react";
+// src/pages/account/SignupPage.tsx
+import React, { useState } from "react";
+import { useDispatch } from "react-redux"; // Import useDispatch to dispatch actions
+import { login, setPetProfileId } from "../../slices/authSlice"; // Import actions
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/layout/Header";
-import Footer from "../../components/layout/Footer";
-import { useAuth } from "../../contexts/AuthContext";
 import { setCookie } from "../../utils/cookies";
+import InputField from "../../components/form/InputField"; // Reused input component
+import Footer from "../../components/layout/Footer";
+import Header from "../../components/layout/Header";
 
+// Define the ErrorResponse interface
 interface ErrorResponse {
   message?: string;
 }
 
 export default function SignupPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
-  const { setAccountId } = useAuth();
+  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsProcessing(true);
     setError("");
 
     // Client-side validation
     if (password !== confirmPassword) {
       setError("Passwords do not match");
-      setIsLoading(false);
+      setIsProcessing(false);
       return;
     }
 
     if (password.length < 6) {
       setError("Password must be at least 6 characters");
-      setIsLoading(false);
+      setIsProcessing(false);
       return;
     }
 
     try {
+      // First, check if the email is already registered
+      const emailCheckRes = await fetch(
+        `http://localhost:5074/api/accounts/email/${email}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        }
+      );
+
+      if (!emailCheckRes.ok) {
+        // If email is already registered, alert the user
+        const emailCheckData = await emailCheckRes.json();
+        if (emailCheckData.message === "Email already registered.") {
+          setError("This email is already in use. Please choose another.");
+          setIsProcessing(false);
+          return;
+        }
+      }
+
+      // Proceed with the registration
       const res = await fetch("http://localhost:5074/api/accounts/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) {
-        let errorData: ErrorResponse = {};
+      if (res.ok) {
+        const data = await res.json();
+        setCookie("accountId", data.id);
+        localStorage.setItem("accountId", data.id);
+
+        // Dispatch Redux actions to set accountId and petProfileId
+        dispatch(login(data.id)); // Set accountId in Redux
+        dispatch(setPetProfileId(null)); // Set petProfileId as null (or set to an actual value once it's available)
+
+        navigate("/profile-creation");
+      } else {
+        // Handle API errors
+        let errorData: ErrorResponse = {}; // Define the errorData as ErrorResponse
         try {
           errorData = await res.json();
         } catch (parseError) {
           console.error("Failed to parse error response:", parseError);
         }
-        throw new Error(errorData.message || "Registration failed");
+        setError(errorData.message || "Registration failed");
+        setIsProcessing(false);
       }
-
-      const data = await res.json();
-      setCookie("accountId", data.id);
-      localStorage.setItem("accountId", data.id);
-      setAccountId(data.id);
-      navigate("/profile-creation");
     } catch (err) {
+      // Handle network errors
       console.error("Signup error:", err);
-      if (err instanceof Error) {
-        setError(err.message);
-      } else {
-        setError("An unexpected error occurred");
-      }
-    } finally {
-      setIsLoading(false);
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred"
+      );
+      setIsProcessing(false);
     }
   };
 
@@ -84,60 +111,42 @@ export default function SignupPage() {
 
           {error && <div className="text-red-500 text-sm">{error}</div>}
 
-          <div>
-            <label htmlFor="email" className="block mb-1 font-medium">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              className="w-full border p-2 rounded"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
-          </div>
+          <InputField
+            label="Email"
+            name="email"
+            type="email"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
 
-          <div>
-            <label htmlFor="password" className="block mb-1 font-medium">
-              Password
-            </label>
-            <input
-              id="password"
-              type="password"
-              placeholder="Create a password (min 6 characters)"
-              className="w-full border p-2 rounded"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+          <InputField
+            label="Password"
+            name="password"
+            type="password"
+            placeholder="Create a password (min 6 characters)"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
 
-          {/* Password Confirmation Field */}
-          <div>
-            <label htmlFor="confirmPassword" className="block mb-1 font-medium">
-              Confirm Password
-            </label>
-            <input
-              id="confirmPassword"
-              type="password"
-              placeholder="Re-enter your password"
-              className="w-full border p-2 rounded"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              required
-              minLength={6}
-            />
-          </div>
+          <InputField
+            label="Confirm Password"
+            name="confirmPassword"
+            type="password"
+            placeholder="Re-enter your password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            required
+          />
 
           <button
             type="submit"
             className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
-            disabled={isLoading}
+            disabled={isProcessing}
           >
-            {isLoading ? "Registering..." : "Register"}
+            Register
           </button>
         </form>
       </main>
