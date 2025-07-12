@@ -19,8 +19,8 @@ export default function ProfileUpdatePage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-gray-50 py-8 px-4">
-        <div className="max-w-md mx-auto bg-white p-6 rounded-xl shadow-md">
+      <main className="min-h-screen bg-light-muted dark:bg-dark-muted py-8 px-4 text-light-text dark:text-dark-text">
+        <div className="max-w-md mx-auto bg-light-background dark:bg-dark-background p-6 rounded-xl shadow-md">
           <h2 className="text-3xl font-bold text-center mb-4">
             Update Pet Profile
           </h2>

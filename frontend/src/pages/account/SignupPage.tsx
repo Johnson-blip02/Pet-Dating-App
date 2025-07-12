@@ -99,17 +99,21 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
 
-      <main className="flex-grow flex items-center justify-center bg-gray-50 px-4">
+      <main className="flex-grow flex items-center justify-center px-4 bg-light-background dark:bg-dark-background">
         <form
           onSubmit={handleSignup}
-          className="w-full max-w-md space-y-4 bg-white p-6 rounded shadow"
+          className="w-full max-w-md space-y-4 p-6 rounded shadow bg-white dark:bg-gray-900"
         >
           <h2 className="text-2xl font-bold">Sign Up</h2>
 
-          {error && <div className="text-red-500 text-sm">{error}</div>}
+          {error && (
+            <div className="text-red-500 dark:text-red-400 text-sm">
+              {error}
+            </div>
+          )}
 
           <InputField
             label="Email"
@@ -143,7 +147,7 @@ export default function SignupPage() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-2 rounded hover:bg-blue-600 disabled:opacity-50"
+            className="w-full bg-yellow-400 dark:bg-yellow-500 text-black dark:text-black p-2 rounded hover:bg-yellow-500 dark:hover:bg-yellow-600 disabled:opacity-50 transition"
             disabled={isProcessing}
           >
             Register

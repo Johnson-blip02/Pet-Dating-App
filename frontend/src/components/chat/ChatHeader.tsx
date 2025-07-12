@@ -8,10 +8,10 @@ export default function ChatHeader({ user }: ChatHeaderProps) {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-between p-4 border-b shadow-sm bg-white sticky top-0 z-10">
+    <div className="flex items-center justify-between p-4 border-b shadow-sm bg-light-background dark:bg-dark-border sticky top-0 z-10">
       <button
         onClick={() => navigate("/messenger")}
-        className="flex items-center text-gray-700 hover:text-gray-900"
+        className="flex items-center text-black hover:text-gray-700"
         aria-label="Back to Messenger"
       >
         <svg
@@ -35,14 +35,14 @@ export default function ChatHeader({ user }: ChatHeaderProps) {
           <img
             src={`http://localhost:5074/${user.photoPath}`}
             alt={user.userName}
-            className="h-10 w-10 rounded-full object-cover border"
+            className="h-10 w-10 rounded-full object-cover border border-light-muted"
           />
         ) : (
-          <div className="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center text-sm">
+          <div className="h-10 w-10 rounded-full bg-light-muted flex items-center justify-center text-sm text-light-text">
             ?
           </div>
         )}
-        <span className="font-semibold text-gray-800">{user.userName}</span>
+        <span className="font-semibold text-light-text">{user.userName}</span>
       </div>
     </div>
   );

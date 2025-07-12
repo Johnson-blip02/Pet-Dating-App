@@ -56,7 +56,9 @@ export default function ProfileForm({
         type="submit"
         disabled={isSubmitting}
         className={`w-full py-3 rounded-lg font-semibold text-white transition ${
-          isSubmitting ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+          isSubmitting
+            ? "bg-yellow-400 cursor-not-allowed"
+            : "bg-yellow-600 hover:bg-yellow-700 dark:bg-yellow-500 dark:hover:bg-yellow-600"
         }`}
       >
         {isSubmitting ? "Saving..." : "Save Changes"}

@@ -58,17 +58,19 @@ export default function PetProfilePage() {
   return (
     <>
       <Header />
-      <div className="max-w-3xl mx-auto px-6 py-10">
+      <div className="max-w-3xl mx-auto px-6 py-10 text-light-text dark:text-dark-text">
         <img
           src={`http://localhost:5074/${user.photoPath}`}
           alt={user.userName}
           className="w-full h-80 object-cover rounded-xl shadow mb-6"
         />
         <h2 className="text-3xl font-bold">{user.userName}</h2>
-        <p className="text-gray-600 mb-2">
+        <p className="text-light-secondary-text dark:text-dark-secondary-text mb-2">
           {user.petType} · {user.age} years old
         </p>
-        <p className="text-gray-500 mb-4">{user.location}</p>
+        <p className="text-light-secondary-text dark:text-dark-secondary-text mb-4">
+          {user.location}
+        </p>
         <p className="mb-4">
           <strong>Preferences:</strong> {user.petPreferences?.join(", ")}
         </p>

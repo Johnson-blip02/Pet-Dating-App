@@ -21,12 +21,12 @@ export default function PhotoUpload({
         <img
           src={displayImage}
           alt="Pet"
-          className="w-32 h-32 object-cover rounded-full mx-auto mb-2"
+          className="w-32 h-32 object-cover rounded-full mx-auto mb-2 border-4 border-yellow-400 dark:border-yellow-500"
         />
       ) : (
-        <div className="w-32 h-32 bg-gray-200 rounded-full mx-auto mb-2" />
+        <div className="w-32 h-32 bg-yellow-100 dark:bg-yellow-900 rounded-full mx-auto mb-2" />
       )}
-      <label className="text-blue-600 cursor-pointer hover:underline">
+      <label className="text-yellow-600 dark:text-yellow-400 cursor-pointer hover:underline">
         Change Photo
         <input
           type="file"

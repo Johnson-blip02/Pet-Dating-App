@@ -70,9 +70,9 @@ export default function LikedProfilePage() {
     return <p className="text-center mt-10">Loading...</p>;
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
       <Header />
-      <main className="flex-grow p-6 bg-gray-50">
+      <main className="flex-grow p-6 bg-light-muted dark:bg-dark-muted">
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">Likes Overview</h2>
 
@@ -86,7 +86,7 @@ export default function LikedProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">
+              <p className="text-light-secondary-text dark:text-dark-secondary-text text-sm">
                 You haven't liked anyone yet.
               </p>
             )}
@@ -102,7 +102,9 @@ export default function LikedProfilePage() {
                 ))}
               </div>
             ) : (
-              <p className="text-gray-500 text-sm">No one has liked you yet.</p>
+              <p className="text-light-secondary-text dark:text-dark-secondary-text text-sm">
+                No one has liked you yet.
+              </p>
             )}
           </div>
         </div>

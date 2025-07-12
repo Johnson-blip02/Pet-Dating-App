@@ -12,8 +12,8 @@ export default function ProfileInfoCard({
   petProfile: PetProfile | null;
 }) {
   return (
-    <div className="bg-white p-6 rounded shadow space-y-4">
-      <h2 className="text-2xl font-bold">My Profile</h2>
+    <div className="p-6 rounded shadow space-y-4 bg-light-background text-light-text">
+      <h2 className="text-2xl font-bold text-light-accent">My Profile</h2>
 
       <div className="space-y-2">
         <p>
@@ -26,7 +26,10 @@ export default function ProfileInfoCard({
 
       {petProfile ? (
         <div className="space-y-2">
-          <h3 className="text-xl font-semibold">Pet Profile</h3>
+          <h3 className="text-xl font-semibold text-light-accent">
+            Pet Profile
+          </h3>
+
           <p>
             <strong>Name:</strong> {petProfile.userName}
           </p>
