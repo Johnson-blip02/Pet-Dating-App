@@ -1,4 +1,3 @@
-// src/slices/chatSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { ChatMessage } from "../types/chatMessage";
 import type { PetProfile } from "../types/petProfile";

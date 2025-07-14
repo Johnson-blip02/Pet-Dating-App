@@ -3,7 +3,7 @@ type Props = {
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const options = ["Dog", "Cat", "Rabbit"];
+const options = ["Dog", "Cat"];
 
 export default function PreferencesCheckboxes({
   preferences,

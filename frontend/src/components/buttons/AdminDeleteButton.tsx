@@ -1,6 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logoutUser } from "../../utils/logout"; // Import logoutUser
 
 interface AdminDeleteButtonProps {
   userId: string; // Receive the userId from the AdminPage
@@ -12,7 +10,6 @@ export default function AdminDeleteButton({
   onDeleteSuccess,
 }: AdminDeleteButtonProps) {
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
 
   const handleDelete = async () => {
     const confirm = window.confirm(

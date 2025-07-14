@@ -1,4 +1,3 @@
-// src/slices/likeSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import type { MatchUser } from "../types/match"; // Import MatchUser for match-related actions
 import type { PetProfile } from "../types/petProfile"; // For liked users and liked-by users

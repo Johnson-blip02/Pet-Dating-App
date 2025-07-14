@@ -1,4 +1,3 @@
-// src/slices/themeSlice.ts
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
 type ThemeMode = "light" | "dark";

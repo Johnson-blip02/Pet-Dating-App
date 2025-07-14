@@ -1,4 +1,3 @@
-// utils/cookies.ts
 export function getCookie(name: string): string | null {
   if (typeof document === "undefined") return null; // For SSR safety
   const cookies = document.cookie.split("; ");

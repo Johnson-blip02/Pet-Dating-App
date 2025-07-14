@@ -19,6 +19,7 @@ import LoginPage from "./pages/account/LoginPage";
 import SignupPage from "./pages/account/SignupPage";
 import ProfileUpdatePage from "./pages/profile/ProfileUpdatePage";
 import AdminPage from "./pages/admin/AdminPage";
+import SwipePage from "./pages/explore/SwipePage";
 
 export default function App() {
   const dispatch = useDispatch();
@@ -39,6 +40,7 @@ export default function App() {
       <Route path="/login" element={<LoginPage />} />
       <Route path="/signup" element={<SignupPage />} />
       <Route path="/explore" element={<ExplorePage />} />
+      <Route path="/swipe" element={<SwipePage />} />
       <Route path="/profile/:id" element={<PetProfilePage />} />
       <Route path="/profile-creation" element={<ProfileCreation />} />
       <Route path="/user-profile" element={<UserProfilePage />} />
