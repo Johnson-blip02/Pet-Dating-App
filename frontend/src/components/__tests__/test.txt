@@ -1,0 +1,8 @@
+| Component Type      | What to Test                                           |
+| ------------------- | ------------------------------------------------------ |
+| **UI Components**   | Renders correct content, reacts to props, classNames   |
+| **Form Inputs**     | Typing, validation, submit logic                       |
+| **Redux-Connected** | Reads/writes state, dispatches actions                 |
+| **Router Pages**    | Navigation behavior, conditional rendering             |
+| **Chat/Socket UI**  | Message rendering, button actions, disconnect warnings |
+| **Header/Footer**   | Logged-in state display, theme toggle, link navigation |

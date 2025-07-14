@@ -78,6 +78,12 @@ export default function Header() {
                 Explore
               </Link>
               <Link
+                to="/swipe"
+                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+              >
+                Swipe
+              </Link>
+              <Link
                 to="/liked-profile"
                 className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
               >

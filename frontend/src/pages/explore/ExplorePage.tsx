@@ -10,7 +10,7 @@ export default function ExplorePage() {
   const [users, setUsers] = useState([]);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
-  const limit = 6; // cards per page
+  const limit = 8; // cards per page
   const totalPages = Math.ceil(totalCount / limit);
   const navigate = useNavigate();
   const [filters, setFilters] = useState({
