@@ -10,6 +10,7 @@ export default function AdminDeleteButton({
   onDeleteSuccess,
 }: AdminDeleteButtonProps) {
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleDelete = async () => {
     const confirm = window.confirm(
@@ -22,9 +23,7 @@ export default function AdminDeleteButton({
 
     try {
       // First, fetch the accountId associated with the userId
-      const accountRes = await fetch(
-        `http://localhost:5074/api/accounts/user/${userId}`
-      );
+      const accountRes = await fetch(`${apiUrl}/accounts/user/${userId}`);
 
       if (!accountRes.ok) {
         const errorData = await accountRes.json();
@@ -50,15 +49,12 @@ export default function AdminDeleteButton({
       const accountId = accountData.id;
 
       // Proceed with the delete operation
-      const res = await fetch(
-        `http://localhost:5074/api/accounts/${accountId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`${apiUrl}/accounts/${accountId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (res.ok) {
         // Optional callback

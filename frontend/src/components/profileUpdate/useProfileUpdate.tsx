@@ -10,11 +10,12 @@ export function useProfileUpdate() {
   const [photoPreview, setPhotoPreview] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!id) return;
 
-    fetch(`http://localhost:5074/api/users/${id}`)
+    fetch(`${apiUrl}/users/${id}`)
       .then((res) => res.json())
       .then((data) => {
         setFormData(data);
@@ -44,7 +45,7 @@ export function useProfileUpdate() {
     setIsSubmitting(true);
 
     try {
-      await fetch(`http://localhost:5074/api/users/${id}`, {
+      await fetch(`${apiUrl}/users/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -55,9 +56,7 @@ export function useProfileUpdate() {
         form.append("file", photoFile);
 
         const uploadRes = await fetch(
-          `http://localhost:5074/api/image/update?oldPath=${
-            formData.photoPath || ""
-          }`,
+          `${apiUrl}/image/update?oldPath=${formData.photoPath || ""}`,
           {
             method: "PUT",
             body: form,
@@ -67,7 +66,7 @@ export function useProfileUpdate() {
         if (!uploadRes.ok) throw new Error("Photo upload failed");
         const result = await uploadRes.json();
 
-        await fetch(`http://localhost:5074/api/users/${id}`, {
+        await fetch(`${apiUrl}/users/${id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ ...formData, photoPath: result.path }),

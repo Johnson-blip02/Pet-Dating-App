@@ -10,6 +10,8 @@ export default function PetProfilePage() {
   const { id: likedId } = useParams(); // profile being viewed
   const [user, setUser] = useState<any>(null);
   const [isHeart, setIsHeart] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const photoUrl = import.meta.env.VITE_PHOTO_URL;
 
   useEffect(() => {
     let isMounted = true;
@@ -17,7 +19,7 @@ export default function PetProfilePage() {
 
     console.log("Fetching viewed user:", likedId);
 
-    fetch(`http://localhost:5074/api/users/${likedId}`)
+    fetch(`${apiUrl}/users/${likedId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch viewed user");
         return res.json();
@@ -32,7 +34,7 @@ export default function PetProfilePage() {
 
     if (currentUserId && likedId) {
       console.log("Fetching current user:", currentUserId);
-      fetch(`http://localhost:5074/api/users/${currentUserId}`)
+      fetch(`${apiUrl}/users/${currentUserId}`)
         .then((res) => {
           if (!res.ok) throw new Error("Failed to fetch current user");
           return res.json();
@@ -60,7 +62,7 @@ export default function PetProfilePage() {
       <Header />
       <div className="max-w-3xl mx-auto px-6 py-10 text-light-text dark:text-dark-text">
         <img
-          src={`http://localhost:5074/${user.photoPath}`}
+          src={`${photoUrl}/${user.photoPath}`}
           alt={user.userName}
           className="w-full h-80 object-cover rounded-xl shadow mb-6"
         />

@@ -9,13 +9,14 @@ export default function SwipePage() {
   const [candidates, setCandidates] = useState<any[]>([]);
   const [userLikes, setUserLikes] = useState<string[]>([]);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const accountId = localStorage.getItem("accountId");
   const petProfileId = localStorage.getItem("petProfileId");
 
   // Fetch user’s own profile to get their likedUserIds
   const fetchUserLikes = async () => {
-    const res = await fetch(`http://localhost:5074/api/users/${petProfileId}`);
+    const res = await fetch(`${apiUrl}/users/${petProfileId}`);
     if (!res.ok) throw new Error("Failed to fetch own profile");
     const user = await res.json();
     setUserLikes(user.likedUserIds || []);
@@ -24,7 +25,7 @@ export default function SwipePage() {
   // Fetch all candidates once, excluding self and already liked users
   const initializeCandidates = async () => {
     try {
-      const res = await fetch("http://localhost:5074/api/users");
+      const res = await fetch(`${apiUrl}/users`);
       const data = await res.json();
 
       const filtered = data.users.filter(

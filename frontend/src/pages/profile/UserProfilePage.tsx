@@ -10,6 +10,7 @@ import ProfileInfoCard from "../../components/cards/ProfileInfoCard";
 export default function UserProfilePage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   // Access accountId and petProfileId from Redux store
   const { accountId, petProfileId } = useSelector(
@@ -40,7 +41,7 @@ export default function UserProfilePage() {
 
     // If userProfile is not in Redux, fetch from the server
     if (!userProfile) {
-      fetch(`http://localhost:5074/api/accounts/${accountId}`)
+      fetch(`${apiUrl}/accounts/${accountId}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setUserProfile(data)); // Dispatch to Redux (Account)
@@ -54,7 +55,7 @@ export default function UserProfilePage() {
 
     // If petProfile is not in Redux, fetch from the server
     if (!petProfile) {
-      fetch(`http://localhost:5074/api/users/${petProfileId}`)
+      fetch(`${apiUrl}/users/${petProfileId}`)
         .then((res) => res.json())
         .then((data) => {
           dispatch(setPetProfile(data)); // Dispatch to Redux (PetProfile)

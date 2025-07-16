@@ -18,19 +18,18 @@ export default function ChatRoomPage() {
   const [isUserDeleted, setIsUserDeleted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const wsUrl = import.meta.env.VITE_WS_URL;
 
-  // Ensure petProfileId and otherUserId are available
   if (!petProfileId || !otherUserId) {
     return <div>Missing user information</div>;
   }
 
   const roomId = `room_${[petProfileId, otherUserId].sort().join("_")}`;
 
-  // Handle incoming messages
   const handleMessage = (msg: ChatMessage) => {
     if (msg.roomId !== roomId) return;
 
-    // Update the messages state
     setMessages((prevMessages) => {
       const isResponseToTemp = prevMessages.some(
         (m) =>
@@ -56,22 +55,18 @@ export default function ChatRoomPage() {
     });
   };
 
-  // WebSocket hook
   const { sendMessage, isConnected, reconnect } = useChatWebSocket(
-    "ws://localhost:5074/ws",
+    `${wsUrl}/ws`,
     petProfileId,
     otherUserId,
     roomId,
     handleMessage
   );
 
-  // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5074/api/users/${otherUserId}`
-        );
+        const res = await fetch(`${apiUrl}/users/${otherUserId}`);
         if (!res.ok) {
           setUserNotFound(true);
           setIsUserDeleted(true);
@@ -93,14 +88,13 @@ export default function ChatRoomPage() {
     };
 
     if (otherUserId) fetchUser();
-  }, [otherUserId]);
+  }, [apiUrl, otherUserId]);
 
-  // Fetch chat history
   useEffect(() => {
     if (isUserDeleted) return;
 
     setIsLoading(true);
-    fetch(`http://localhost:5074/api/chat/room/${roomId}`)
+    fetch(`${apiUrl}/chat/room/${roomId}`)
       .then((res) => {
         if (!res.ok) throw new Error("Failed to load chat history");
         return res.json();
@@ -113,19 +107,17 @@ export default function ChatRoomPage() {
         setMessages([]);
       })
       .finally(() => setIsLoading(false));
-  }, [roomId, isUserDeleted]);
+  }, [apiUrl, roomId, isUserDeleted]);
 
-  // Scroll to the bottom when new messages are added
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Send message handler
   const handleSend = async () => {
     if (!input.trim() || isUserDeleted || !isConnected) return;
 
     try {
-      const res = await fetch(`http://localhost:5074/api/users/${otherUserId}`);
+      const res = await fetch(`${apiUrl}/users/${otherUserId}`);
       if (!res.ok) {
         setIsUserDeleted(true);
         setUserNotFound(true);
@@ -149,12 +141,10 @@ export default function ChatRoomPage() {
     }
   };
 
-  // Handle key press (Enter key to send message)
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter") handleSend();
   };
 
-  // Show error page if user not found or deleted
   if (userNotFound || isUserDeleted) {
     return (
       <div className="flex items-center justify-center h-screen text-center p-4">

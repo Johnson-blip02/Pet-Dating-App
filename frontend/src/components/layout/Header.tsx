@@ -14,6 +14,7 @@ export default function Header() {
   const petProfileId = useSelector(
     (state: RootState) => state.auth.petProfileId
   );
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [isAdmin, setIsAdmin] = useState(false);
 
@@ -26,7 +27,7 @@ export default function Header() {
     // Check if the accountId and petProfileId exist in the cookies
     if (currentAccountId && currentPetProfileId) {
       // If both accountId and petProfileId exist, fetch account details
-      fetch(`http://localhost:5074/api/accounts/${currentAccountId}`)
+      fetch(`${apiUrl}/accounts/${currentAccountId}`)
         .then((res) => res.json())
         .then((account) => {
           setIsAdmin(account.role === "Admin");

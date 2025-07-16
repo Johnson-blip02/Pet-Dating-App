@@ -37,6 +37,7 @@ export default function ProfileCreationPage() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const cookieId = getCookie("accountId");
@@ -73,7 +74,7 @@ export default function ProfileCreationPage() {
     formData.append("file", file);
 
     try {
-      const res = await fetch("http://localhost:5074/api/image/upload", {
+      const res = await fetch(`${apiUrl}/image/upload`, {
         method: "POST",
         body: formData,
       });
@@ -95,7 +96,7 @@ export default function ProfileCreationPage() {
 
     try {
       // Step 1: Create the pet profile
-      const createRes = await fetch("http://localhost:5074/api/users", {
+      const createRes = await fetch(`${apiUrl}/users`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
@@ -109,7 +110,7 @@ export default function ProfileCreationPage() {
 
       // Step 2: Link the profile to the account
       const linkRes = await fetch(
-        `http://localhost:5074/api/accounts/${accountId}/link-profile`,
+        `${apiUrl}/accounts/${accountId}/link-profile`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

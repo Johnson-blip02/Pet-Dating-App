@@ -14,13 +14,14 @@ export default function LoginPage() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize dispatch to trigger actions
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:5074/api/accounts/login", {
+      const res = await fetch(`${apiUrl}/accounts/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -30,9 +31,7 @@ export default function LoginPage() {
 
       const data = await res.json();
 
-      const accountRes = await fetch(
-        `http://localhost:5074/api/accounts/${data.id}`
-      );
+      const accountRes = await fetch(`${apiUrl}/accounts/${data.id}`);
       if (!accountRes.ok) throw new Error("Failed to fetch account details");
 
       const account = await accountRes.json();

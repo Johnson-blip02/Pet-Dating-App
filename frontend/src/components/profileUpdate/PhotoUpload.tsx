@@ -11,9 +11,10 @@ export default function PhotoUpload({
   photoPreview,
   handleFileChange,
 }: Props) {
+  const apiUrl = import.meta.env.VITE_API_URL;
   const displayImage =
     photoPreview ||
-    (formData.photoPath ? `http://localhost:5074/${formData.photoPath}` : null);
+    (formData.photoPath ? `${apiUrl}/${formData.photoPath}` : null);
 
   return (
     <div className="text-center">

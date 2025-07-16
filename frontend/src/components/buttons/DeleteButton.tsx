@@ -13,6 +13,7 @@ export default function DeleteButton({
 }: DeleteButtonProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize dispatch to trigger actions
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleDelete = async () => {
     const confirm = window.confirm(
@@ -24,15 +25,12 @@ export default function DeleteButton({
     if (!confirm) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5074/api/accounts/${accountId}`,
-        {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const res = await fetch(`${apiUrl}/accounts/${accountId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       if (res.ok) {
         // Unified logout logic

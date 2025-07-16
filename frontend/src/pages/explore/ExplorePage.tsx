@@ -19,6 +19,7 @@ export default function ExplorePage() {
     minAge: "",
     maxAge: "",
   });
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const fetchUsers = async () => {
     const accountId = localStorage.getItem("accountId");
@@ -29,9 +30,7 @@ export default function ExplorePage() {
     }
 
     let ownPetId = null;
-    const resAccount = await fetch(
-      `http://localhost:5074/api/accounts/${accountId}`
-    );
+    const resAccount = await fetch(`${apiUrl}/accounts/${accountId}`);
     const account = await resAccount.json();
     ownPetId = account.petProfileId;
 
@@ -44,9 +43,7 @@ export default function ExplorePage() {
     params.append("page", page.toString());
     params.append("limit", limit.toString());
 
-    const resUsers = await fetch(
-      `http://localhost:5074/api/users?${params.toString()}`
-    );
+    const resUsers = await fetch(`${apiUrl}/users?${params.toString()}`);
     const data = await resUsers.json();
 
     const filteredUsers = data.users.filter((u: any) => u.id !== ownPetId);

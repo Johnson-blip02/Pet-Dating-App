@@ -6,6 +6,7 @@ import { setLikedUsers, setLikedByUsers } from "../../slices/likeSlice";
 export default function UnHeartButton({ otherUserId, onHeartSuccess }: Heart) {
   const petProfileId = getCookie("petProfileId");
   const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleUnheart = async () => {
     const confirm = window.confirm(
@@ -15,7 +16,7 @@ export default function UnHeartButton({ otherUserId, onHeartSuccess }: Heart) {
 
     try {
       const unheartRes = await fetch(
-        `http://localhost:5074/api/users/${petProfileId}/unheart/${otherUserId}`,
+        `${apiUrl}/users/${petProfileId}/unheart/${otherUserId}`,
         { method: "PUT" }
       );
 

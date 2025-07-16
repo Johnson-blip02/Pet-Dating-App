@@ -1,0 +1,27 @@
+# Ignore Git-related files
+.git
+.gitignore
+
+# Ignore Dockerfile and dockerignore itself if not needed
+Dockerfile
+.dockerignore
+
+# Ignore build output
+bin/
+obj/
+*.user
+*.suo
+
+# Ignore local settings and secrets
+*.env
+*.local
+*.log
+
+# Ignore IDE and editor settings
+.vscode/
+.idea/
+*.csproj.user
+
+# Ignore node/npm stuff (if accidentally included)
+node_modules/
+npm-debug.log

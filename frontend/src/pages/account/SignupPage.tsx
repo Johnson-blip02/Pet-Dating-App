@@ -20,7 +20,8 @@ export default function SignupPage() {
   const [error, setError] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
+  const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -42,13 +43,10 @@ export default function SignupPage() {
 
     try {
       // First, check if the email is already registered
-      const emailCheckRes = await fetch(
-        `http://localhost:5074/api/accounts/email/${email}`,
-        {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      const emailCheckRes = await fetch(`${apiUrl}/accounts/email/${email}`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+      });
 
       if (!emailCheckRes.ok) {
         // If email is already registered, alert the user
@@ -61,7 +59,7 @@ export default function SignupPage() {
       }
 
       // Proceed with the registration
-      const res = await fetch("http://localhost:5074/api/accounts/register", {
+      const res = await fetch(`${apiUrl}/accounts/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),

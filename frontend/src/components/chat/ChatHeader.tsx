@@ -6,6 +6,8 @@ interface ChatHeaderProps {
 
 export default function ChatHeader({ user }: ChatHeaderProps) {
   const navigate = useNavigate();
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const photoUrl = import.meta.env.VITE_PHOTO_URL;
 
   return (
     <div className="flex items-center justify-between p-4 border-b shadow-sm bg-light-background dark:bg-dark-border sticky top-0 z-10">
@@ -33,7 +35,7 @@ export default function ChatHeader({ user }: ChatHeaderProps) {
       <div className="flex items-center gap-3">
         {user?.photoPath ? (
           <img
-            src={`http://localhost:5074/${user.photoPath}`}
+            src={`${photoUrl}/${user.photoPath}`}
             alt={user.userName}
             className="h-10 w-10 rounded-full object-cover border border-light-muted"
           />

@@ -11,6 +11,8 @@ export default function ProfileInfoCard({
   account: Account;
   petProfile: PetProfile | null;
 }) {
+  const photoUrl = import.meta.env.VITE_PHOTO_URL;
+
   return (
     <div className="p-6 rounded shadow space-y-4 bg-light-background text-light-text">
       <h2 className="text-2xl font-bold text-light-accent">My Profile</h2>
@@ -45,10 +47,7 @@ export default function ProfileInfoCard({
 
           {petProfile.photoPath && (
             <img
-              src={`http://localhost:5074/${petProfile.photoPath.replace(
-                /^\/+/,
-                ""
-              )}`}
+              src={`${photoUrl}/${petProfile.photoPath.replace(/^\/+/, "")}`}
               alt="Pet"
               className="w-48 h-48 object-cover rounded"
             />

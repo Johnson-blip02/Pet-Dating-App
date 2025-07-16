@@ -15,6 +15,7 @@ export default function LikedProfilePage() {
     (state: RootState) => state.like.likedByUsers
   ); // Get liked by users from Redux store
   const accountId = getCookie("accountId");
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     if (!accountId) {
@@ -23,7 +24,7 @@ export default function LikedProfilePage() {
     }
 
     // Fetch account data to retrieve petProfileId
-    fetch(`http://localhost:5074/api/accounts/${accountId}`)
+    fetch(`${apiUrl}/accounts/${accountId}`)
       .then((res) => res.json())
       .then((account) => {
         if (!account.petProfileId) {
@@ -32,16 +33,14 @@ export default function LikedProfilePage() {
         }
 
         // Fetch pet profile data
-        fetch(`http://localhost:5074/api/users/${account.petProfileId}`)
+        fetch(`${apiUrl}/users/${account.petProfileId}`)
           .then((res) => res.json())
           .then(async (profileData: PetProfile) => {
             // Function to fetch user profiles by userIds
             const fetchUserProfiles = async (ids: string[]) => {
               const userProfiles: PetProfile[] = [];
               for (const id of ids) {
-                const res = await fetch(
-                  `http://localhost:5074/api/users/${id}`
-                );
+                const res = await fetch(`${apiUrl}/users/${id}`);
                 if (res.ok) {
                   const user = await res.json();
                   userProfiles.push(user);

@@ -3,12 +3,13 @@ import type { PetProfile } from "../../types/petProfile";
 
 export default function PetCard(props: PetProfile) {
   const { userName, age, petType, location, photoPath, id } = props;
+  const photoUrl = import.meta.env.VITE_PHOTO_URL;
 
   return (
     <Link to={`/profile/${id}`} className="block">
       <div className="bg-light-background shadow-md rounded-lg overflow-hidden hover:shadow-lg transition">
         <img
-          src={`http://localhost:5074/${photoPath}`}
+          src={`${photoUrl}/${photoPath}`}
           alt={userName}
           className="w-full h-48 object-cover"
         />

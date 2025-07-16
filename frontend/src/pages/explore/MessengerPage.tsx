@@ -15,6 +15,8 @@ export default function MessengerPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const petProfileId = getCookie("petProfileId");
+  const apiUrl = import.meta.env.VITE_API_URL;
+  const photoUrl = import.meta.env.VITE_PHOTO_URL;
 
   useEffect(() => {
     if (!petProfileId) {
@@ -25,9 +27,7 @@ export default function MessengerPage() {
 
     const fetchMatches = async () => {
       try {
-        const res = await fetch(
-          `http://localhost:5074/api/users/${petProfileId}/matches`
-        );
+        const res = await fetch(`${apiUrl}/users/${petProfileId}/matches`);
         const data = await res.json();
         const matchesData = Array.isArray(data) ? data : data.users ?? [];
         dispatch(setMatches(matchesData)); // Dispatch matches to Redux
@@ -68,10 +68,7 @@ export default function MessengerPage() {
                 className="flex items-center gap-3 p-3 bg-light-background dark:bg-dark-muted shadow rounded cursor-pointer hover:bg-light-accent/20 dark:hover:bg-dark-accent/20 transition-colors"
               >
                 <img
-                  src={`http://localhost:5074/${user.photoPath.replace(
-                    /^\/+/,
-                    ""
-                  )}`}
+                  src={`${photoUrl}/${user.photoPath.replace(/^\/+/, "")}`}
                   alt={user.userName}
                   className="w-12 h-12 rounded-full object-cover"
                 />
