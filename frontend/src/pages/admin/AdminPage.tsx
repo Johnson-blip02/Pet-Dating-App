@@ -10,8 +10,8 @@ export default function AdminPage() {
   const [users, setUsers] = useState([]);
   const navigate = useNavigate();
   const accountId = getCookie("accountId");
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const photoUrl = import.meta.env.VITE_PHOTO_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
+  // const photoUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
 
   useEffect(() => {
     if (!accountId) {
@@ -91,7 +91,7 @@ export default function AdminPage() {
                   </td>
                   <td className="p-2 border border-gray-300 dark:border-gray-600">
                     <img
-                      src={`${photoUrl}/${user.photoPath}`}
+                      src={user.photoPath}
                       alt="pet"
                       className="w-12 h-12 object-cover mx-auto rounded"
                     />

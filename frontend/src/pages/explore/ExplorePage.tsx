@@ -5,6 +5,7 @@ import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
 import PetFilter from "../../components/filters/PetFilter";
 import Pagination from "../../components/navigation/Pagination";
+import { getCookie } from "../../utils/cookies";
 
 export default function ExplorePage() {
   const [users, setUsers] = useState([]);
@@ -19,14 +20,19 @@ export default function ExplorePage() {
     minAge: "",
     maxAge: "",
   });
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const fetchUsers = async () => {
     const accountId = localStorage.getItem("accountId");
+    const petProfileId = localStorage.getItem("petProfileId");
+    const currentAccountId = getCookie("accountId");
+    const currentPetProfileId = getCookie("petProfileId");
 
-    if (!accountId) {
-      navigate("/");
-      return;
+    if (!accountId || !petProfileId) {
+      if (!currentAccountId || !currentPetProfileId) {
+        navigate("/");
+        return;
+      }
     }
 
     let ownPetId = null;

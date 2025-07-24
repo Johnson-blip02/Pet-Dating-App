@@ -4,6 +4,9 @@ import AdminDeleteButton from "../buttons/AdminDeleteButton";
 import { beforeEach, describe, expect, test, vi, type Mock } from "vitest";
 import { useNavigate } from "react-router-dom";
 
+// ✅ Define your backend URL here (matches your environment config)
+const apiUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
+
 // Mock useNavigate
 vi.mock("react-router-dom", () => ({
   useNavigate: vi.fn(),
@@ -25,9 +28,7 @@ describe("AdminDeleteButton", () => {
   });
 
   test("cancels deletion if user clicks 'Cancel'", async () => {
-    vi.spyOn(window, "confirm").mockReturnValue(false); // User cancels
-
-    // 👇 This is the fix: spy on fetch even if we expect it not to be called
+    vi.spyOn(window, "confirm").mockReturnValue(false);
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     render(<AdminDeleteButton userId="test-id" />);
@@ -38,7 +39,7 @@ describe("AdminDeleteButton", () => {
       expect(mockNavigate).not.toHaveBeenCalled();
     });
 
-    fetchSpy.mockRestore(); // ✅ Optional: clean up after the test
+    fetchSpy.mockRestore();
   });
 
   test("completes full delete flow successfully", async () => {
@@ -62,13 +63,21 @@ describe("AdminDeleteButton", () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledTimes(2);
+
+      // ✅ Ensure it targets your Render URL correctly
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        "http://localhost:5074/api/accounts/user/test-id"
+        `${apiUrl}/api/accounts/user/test-id`
       );
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        "http://localhost:5074/api/accounts/account-123",
-        expect.objectContaining({ method: "DELETE" })
+        `${apiUrl}/api/accounts/account-123`,
+        expect.objectContaining({
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
       );
+
       expect(onDeleteSuccess).toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalledWith("/admin", {
         state: { accountDeleted: true },

@@ -18,8 +18,8 @@ export default function ChatRoomPage() {
   const [isUserDeleted, setIsUserDeleted] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const wsUrl = import.meta.env.VITE_WS_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
+  const wsUrl = import.meta.env.VITE_WS_URL || "ws://localhost:5074/ws";
 
   if (!petProfileId || !otherUserId) {
     return <div>Missing user information</div>;

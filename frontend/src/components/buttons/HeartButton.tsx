@@ -6,7 +6,7 @@ import { setLikedUsers, setLikedByUsers } from "../../slices/likeSlice";
 export default function HeartButton({ otherUserId, onHeartSuccess }: Heart) {
   const petProfileId = getCookie("petProfileId");
   const dispatch = useDispatch();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const handleHeart = async () => {
     if (!petProfileId || !otherUserId) {

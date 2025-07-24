@@ -15,7 +15,7 @@ export default function LikedProfilePage() {
     (state: RootState) => state.like.likedByUsers
   ); // Get liked by users from Redux store
   const accountId = getCookie("accountId");
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   useEffect(() => {
     if (!accountId) {

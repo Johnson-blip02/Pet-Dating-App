@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { render, screen, fireEvent } from "@testing-library/react";
-import InputField from "../form/InputField";
+import InputField from "../../components/form/InputField";
 import { describe, it, expect, vi } from "vitest";
 
 describe("InputField", () => {

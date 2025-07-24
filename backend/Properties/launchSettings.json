@@ -7,7 +7,10 @@
       "launchBrowser": false,
       "applicationUrl": "http://localhost:5074",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "CLOUDINARY_CLOUD_NAME": "dkypcdhrd",
+        "CLOUDINARY_API_KEY": "886257276219371",
+        "CLOUDINARY_API_SECRET": "Fulo_1rrGb_v8X3k1iOQOhWrcxM"
       }
     },
     "https": {

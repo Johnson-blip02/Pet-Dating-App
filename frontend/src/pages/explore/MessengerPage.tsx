@@ -15,8 +15,7 @@ export default function MessengerPage() {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
   const petProfileId = getCookie("petProfileId");
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const photoUrl = import.meta.env.VITE_PHOTO_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   useEffect(() => {
     if (!petProfileId) {
@@ -68,7 +67,7 @@ export default function MessengerPage() {
                 className="flex items-center gap-3 p-3 bg-light-background dark:bg-dark-muted shadow rounded cursor-pointer hover:bg-light-accent/20 dark:hover:bg-dark-accent/20 transition-colors"
               >
                 <img
-                  src={`${photoUrl}/${user.photoPath.replace(/^\/+/, "")}`}
+                  src={user.photoPath}
                   alt={user.userName}
                   className="w-12 h-12 rounded-full object-cover"
                 />

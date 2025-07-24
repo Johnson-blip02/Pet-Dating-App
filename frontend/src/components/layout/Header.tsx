@@ -10,6 +10,7 @@ export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const dispatch = useDispatch();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const accountId = useSelector((state: RootState) => state.auth.accountId);
   const petProfileId = useSelector(
     (state: RootState) => state.auth.petProfileId
@@ -19,7 +20,7 @@ export default function Header() {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    console.log("Auth check running - current cookies:", document.cookie);
+    // console.log("Auth check running - current cookies:", document.cookie);
 
     const currentAccountId = getCookie("accountId");
     const currentPetProfileId = getCookie("petProfileId");
@@ -50,7 +51,7 @@ export default function Header() {
   }, [location, dispatch]);
 
   const handleLogout = () => {
-    console.log("Logout initiated");
+    // console.log("Logout initiated");
     logoutUser(dispatch); // Using the centralized logout function
     setIsAdmin(false);
     navigate("/"); // Navigate to home page
@@ -68,31 +69,74 @@ export default function Header() {
           <ThemeToggle />
         </div>
 
-        {/* Navigation */}
-        <nav className="hidden md:flex space-x-6">
+        {/* Mobile menu toggle */}
+        <div className="md:hidden">
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="text-light-text dark:text-dark-text focus:outline-none"
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex space-x-6 items-center">
+          {isLoggedIn && isProfileComplete && (
+            <>
+              <Link to="/explore">Explore</Link>
+              <Link to="/swipe">Swipe</Link>
+              <Link to="/liked-profile">Likes</Link>
+              <Link to="/messenger">Messenger</Link>
+            </>
+          )}
+          {isAdmin && <Link to="/admin">Admin</Link>}
+          <Link to="/help">Help</Link>
+          {isLoggedIn ? (
+            <>
+              <Link to="/user-profile">My Profile</Link>
+              <button onClick={handleLogout} className="text-sm">
+                Logout
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">Login</Link>
+              <Link to="/signup">Sign Up</Link>
+            </>
+          )}
+        </nav>
+      </div>
+
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="md:hidden px-6 py-4 space-y-4 bg-light-accent dark:bg-dark-accent shadow-md rounded-b">
           {isLoggedIn && isProfileComplete && (
             <>
               <Link
                 to="/explore"
-                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Explore
               </Link>
               <Link
                 to="/swipe"
-                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Swipe
               </Link>
               <Link
                 to="/liked-profile"
-                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Likes
               </Link>
               <Link
                 to="/messenger"
-                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Messenger
               </Link>
@@ -101,32 +145,34 @@ export default function Header() {
           {isAdmin && (
             <Link
               to="/admin"
-              className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+              onClick={() => setIsMenuOpen(false)}
+              className="block"
             >
               Admin
             </Link>
           )}
           <Link
             to="/help"
-            className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+            onClick={() => setIsMenuOpen(false)}
+            className="block"
           >
             Help
           </Link>
-        </nav>
-
-        {/* Auth Buttons */}
-        <div className="hidden md:flex space-x-4 items-center">
           {isLoggedIn ? (
             <>
               <Link
                 to="/user-profile"
-                className="text-light-text/70 hover:text-light-text dark:text-dark-text/70 dark:hover:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 My Profile
               </Link>
               <button
-                onClick={handleLogout}
-                className="px-4 py-2 border border-light-text/30 dark:border-dark-text/30 rounded hover:bg-light-background/10 dark:hover:bg-dark-background/10 text-sm text-light-text dark:text-dark-text"
+                onClick={() => {
+                  handleLogout();
+                  setIsMenuOpen(false);
+                }}
+                className="block text-left w-full"
               >
                 Logout
               </button>
@@ -135,20 +181,22 @@ export default function Header() {
             <>
               <Link
                 to="/login"
-                className="px-4 py-2 border border-light-text/30 dark:border-dark-text/30 rounded hover:bg-light-background/10 dark:hover:bg-dark-background/10 text-sm text-light-text dark:text-dark-text"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="px-4 py-2 bg-light-text text-light-background rounded hover:bg-light-text/90 text-sm dark:bg-dark-text dark:text-dark-background dark:hover:bg-dark-text/90"
+                onClick={() => setIsMenuOpen(false)}
+                className="block"
               >
                 Sign Up
               </Link>
             </>
           )}
         </div>
-      </div>
+      )}
     </header>
   );
 }

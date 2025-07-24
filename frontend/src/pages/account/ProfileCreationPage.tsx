@@ -37,7 +37,7 @@ export default function ProfileCreationPage() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   useEffect(() => {
     const cookieId = getCookie("accountId");
@@ -74,14 +74,15 @@ export default function ProfileCreationPage() {
     formData.append("file", file);
 
     try {
-      const res = await fetch(`${apiUrl}/image/upload`, {
+      const res = await fetch(`${apiUrl}/imageupload/upload`, {
         method: "POST",
         body: formData,
       });
 
       if (!res.ok) throw new Error("Upload failed");
+
       const data = await res.json();
-      setForm((prev) => ({ ...prev, photoPath: data.path }));
+      setForm((prev) => ({ ...prev, photoPath: data.url })); // ✅ save full URL
     } catch (error) {
       console.error("Image upload failed:", error);
       setError("Image upload failed");
@@ -121,6 +122,7 @@ export default function ProfileCreationPage() {
       if (linkRes.ok) {
         // Success case - keep processing state during navigation
         setCookie("petProfileId", newProfile.id);
+        localStorage.setItem("petProfileId", newProfile.id);
         setSuccessMessage("Pet profile created and linked!");
 
         // Dispatch to Redux

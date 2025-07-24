@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    ports:
+      - "5074:8080"
+    environment:
+      - MongoDb__ConnectionString=mongodb+srv://johnsonr17p:W7zKTV56qM3DzFmy@cluster0.kwpwjgs.mongodb.net/
+      - CLOUDINARY_CLOUD_NAME=dkypcdhrd
+      - CLOUDINARY_API_KEY=886257276219371
+      - CLOUDINARY_API_SECRET=Fulo_1rrGb_v8X3k1iOQOhWrcxM
+    depends_on:
+      - mongo
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - "27017:27017"

@@ -1,10 +1,9 @@
-// src/pages/account/LoginPage.tsx
 import React, { useState } from "react";
-import { useDispatch } from "react-redux"; // Import useDispatch from react-redux
-import { login, setPetProfileId } from "../../slices/authSlice"; // Import the login and setPetProfileId actions
+import { useDispatch } from "react-redux";
+import { login, setPetProfileId } from "../../slices/authSlice";
 import { useNavigate } from "react-router-dom";
 import { setCookie } from "../../utils/cookies";
-import InputField from "../../components/form/InputField"; // Reused input component
+import InputField from "../../components/form/InputField";
 import Footer from "../../components/layout/Footer";
 import Header from "../../components/layout/Header";
 
@@ -12,13 +11,15 @@ export default function LoginPage() {
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [loginError, setLoginError] = useState<string>(""); // 🔸 New state
   const navigate = useNavigate();
-  const dispatch = useDispatch(); // Initialize dispatch to trigger actions
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const dispatch = useDispatch();
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    setLoginError(""); // Clear previous error
 
     try {
       const res = await fetch(`${apiUrl}/accounts/login`, {
@@ -27,7 +28,14 @@ export default function LoginPage() {
         body: JSON.stringify({ email, password }),
       });
 
-      if (!res.ok) throw new Error("Login failed");
+      if (!res.ok) {
+        if (res.status === 401) {
+          setLoginError("Incorrect email or password."); // 🔸 Friendly message
+        } else {
+          setLoginError("An unexpected error occurred. Please try again.");
+        }
+        return;
+      }
 
       const data = await res.json();
 
@@ -36,21 +44,20 @@ export default function LoginPage() {
 
       const account = await accountRes.json();
 
-      // Set cookies and localStorage for persistence across sessions
       setCookie("accountId", data.id);
       setCookie("petProfileId", account.petProfileId);
-
       localStorage.setItem("accountId", data.id);
       localStorage.setItem("petProfileId", account.petProfileId);
 
-      // Dispatch the login action to Redux to update the accountId in Redux store
-      dispatch(login(data.id)); // Set accountId in Redux
-      dispatch(setPetProfileId(account.petProfileId)); // Set petProfileId in Redux
+      dispatch(login(data.id));
+      dispatch(setPetProfileId(account.petProfileId));
 
-      navigate("/"); // Navigate to home after login
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
-      alert("Login failed. Please check your credentials and try again.");
+      setLoginError(
+        "Login failed. Please check your credentials and try again."
+      );
     } finally {
       setIsLoading(false);
     }
@@ -85,6 +92,13 @@ export default function LoginPage() {
               onChange={(e) => setPassword(e.target.value)}
               placeholder="Enter your password"
             />
+
+            {/* 🔸 Display error message if loginError is set */}
+            {loginError && (
+              <div className="text-red-600 text-sm text-center">
+                {loginError}
+              </div>
+            )}
 
             <button
               type="submit"

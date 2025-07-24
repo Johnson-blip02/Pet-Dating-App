@@ -21,7 +21,7 @@ export default function SignupPage() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();

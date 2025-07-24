@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.Configure<MongoDbSettings>(
     builder.Configuration.GetSection("MongoDb"));
 
+builder.Configuration.AddEnvironmentVariables();
+
 // Log connection string at startup
 var mongoSection = builder.Configuration.GetSection("MongoDb");
 var connectionString = mongoSection.GetValue<string>("ConnectionString");
@@ -18,6 +20,7 @@ builder.Services.AddSingleton<UserService>();
 builder.Services.AddSingleton<AccountService>();
 builder.Services.AddSingleton<ChatMessageService>();
 builder.Services.AddSingleton<ChatWebSocketHandler>(); // Register your WebSocket handler
+builder.Services.AddScoped<CloudinaryService>();
 
 
 

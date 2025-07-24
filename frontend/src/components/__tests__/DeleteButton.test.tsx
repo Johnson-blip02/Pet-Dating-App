@@ -77,9 +77,10 @@ describe("DeleteButton", () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        "http://localhost:5074/api/accounts/acc-123",
+        expect.stringContaining("/api/accounts/acc-123"),
         expect.objectContaining({ method: "DELETE" })
       );
+
       expect(mockLogout).toHaveBeenCalled();
       expect(onDeleteSuccess).toHaveBeenCalled();
       expect(mockNavigate).toHaveBeenCalledWith("/", {

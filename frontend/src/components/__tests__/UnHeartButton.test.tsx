@@ -8,6 +8,9 @@ import * as cookies from "../../utils/cookies";
 import { vi, describe, test, expect, beforeEach } from "vitest";
 import type { JSX } from "react";
 
+// Set backend URL
+const apiUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
+
 // Mock getCookie with typing
 vi.mock("../../utils/cookies", () => ({
   getCookie: vi.fn(),
@@ -40,7 +43,7 @@ describe("UnHeartButton", () => {
 
   test("cancels if user clicks 'Cancel'", async () => {
     mockGetCookie.mockReturnValue("pet123");
-    vi.spyOn(window, "confirm").mockReturnValue(false); // User cancels
+    vi.spyOn(window, "confirm").mockReturnValue(false);
     const fetchSpy = vi.spyOn(globalThis, "fetch");
 
     renderWithStore(<UnHeartButton otherUserId="user456" />);
@@ -58,7 +61,7 @@ describe("UnHeartButton", () => {
 
     globalThis.fetch = vi.fn().mockResolvedValueOnce({
       ok: true,
-      json: async () => ({}), // simulate empty response
+      json: async () => ({}),
     });
 
     const onHeartSuccess = vi.fn();
@@ -71,7 +74,7 @@ describe("UnHeartButton", () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        "http://localhost:5074/api/users/pet123/unheart/user456",
+        `${apiUrl}/api/users/pet123/unheart/user456`,
         {
           method: "PUT",
         }

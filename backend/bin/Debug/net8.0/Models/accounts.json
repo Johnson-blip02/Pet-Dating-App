@@ -1,0 +1,62 @@
+[
+  {
+    "email": "admin@petmatch.com",
+    "password": "admin123",
+    "role": "Admin",
+    "petProfileId": "68575f31b5f48e8a7383959e"
+  },
+  {
+    "email": "mochi@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a7383959f"
+  },
+  {
+    "email": "luna@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a0"
+  },
+  {
+    "email": "cleo@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a1"
+  },
+  {
+    "email": "snowball@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a2"
+  },
+  {
+    "email": "rex@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a3"
+  },
+  {
+    "email": "bailey@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a4"
+  },
+  {
+    "email": "zeus@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a5"
+  },
+  {
+    "email": "toby@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a6"
+  },
+  {
+    "email": "rocky@petmatch.com",
+    "password": "test123",
+    "role": "User",
+    "petProfileId": "68575f31b5f48e8a738395a7"
+  }
+]

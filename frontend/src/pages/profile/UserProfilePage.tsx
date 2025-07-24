@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import type { RootState } from "../../store";
 import { setUserProfile, setPetProfile } from "../../slices/profileSlice";
+import { getCookie } from "../../utils/cookies";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import ProfileInfoCard from "../../components/cards/ProfileInfoCard";
@@ -12,9 +13,12 @@ export default function UserProfilePage() {
   const dispatch = useDispatch();
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // Access accountId and petProfileId from Redux store
-  const { accountId, petProfileId } = useSelector(
-    (state: RootState) => state.auth
+  // Redux values
+  const reduxAccountId = useSelector(
+    (state: RootState) => state.auth.accountId
+  );
+  const reduxPetProfileId = useSelector(
+    (state: RootState) => state.auth.petProfileId
   );
   const { userProfile, petProfile } = useSelector(
     (state: RootState) => state.profile
@@ -23,8 +27,12 @@ export default function UserProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // Fallback values from cookies
+  const accountId = reduxAccountId || getCookie("accountId");
+  const petProfileId = reduxPetProfileId || getCookie("petProfileId");
+
   useEffect(() => {
-    // If accountId or petProfileId are missing, redirect to appropriate pages
+    // Redirect if missing
     if (!accountId) {
       console.log("Redirecting to login due to missing accountId");
       navigate("/login");
@@ -39,36 +47,42 @@ export default function UserProfilePage() {
       return;
     }
 
-    // If userProfile is not in Redux, fetch from the server
+    // Fetch account if missing
     if (!userProfile) {
       fetch(`${apiUrl}/accounts/${accountId}`)
         .then((res) => res.json())
-        .then((data) => {
-          dispatch(setUserProfile(data)); // Dispatch to Redux (Account)
-        })
+        .then((data) => dispatch(setUserProfile(data)))
         .catch((err) => {
-          setError("Failed to load account information");
           console.error(err);
+          setError("Failed to load account information");
           navigate("/login");
         });
     }
 
-    // If petProfile is not in Redux, fetch from the server
+    // Fetch pet profile if missing
     if (!petProfile) {
       fetch(`${apiUrl}/users/${petProfileId}`)
         .then((res) => res.json())
-        .then((data) => {
-          dispatch(setPetProfile(data)); // Dispatch to Redux (PetProfile)
-        })
+        .then((data) => dispatch(setPetProfile(data)))
         .catch((err) => {
-          setError("Failed to load pet profile");
           console.error(err);
+          setError("Failed to load pet profile");
           navigate("/profile-creation");
         });
     }
 
-    setLoading(false); // Stop loading after data is fetched
-  }, [accountId, petProfileId, userProfile, petProfile, dispatch, navigate]);
+    setLoading(false);
+  }, [
+    reduxAccountId,
+    reduxPetProfileId,
+    accountId,
+    petProfileId,
+    userProfile,
+    petProfile,
+    dispatch,
+    navigate,
+    apiUrl,
+  ]);
 
   if (loading) return <p className="text-center mt-10">Loading...</p>;
   if (!userProfile || !petProfile) return null;

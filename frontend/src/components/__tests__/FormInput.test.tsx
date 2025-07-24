@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { render, screen, fireEvent } from "@testing-library/react";
-import FormInput from "../profileCreation/FormInput";
+import FormInput from "../../components/profileCreation/FormInput";
 import { describe, it, expect, vi } from "vitest";
 
 describe("FormInput", () => {

@@ -10,8 +10,8 @@ export default function PetProfilePage() {
   const { id: likedId } = useParams(); // profile being viewed
   const [user, setUser] = useState<any>(null);
   const [isHeart, setIsHeart] = useState(false);
-  const apiUrl = import.meta.env.VITE_API_URL;
-  const photoUrl = import.meta.env.VITE_PHOTO_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
+  // const photoUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
 
   useEffect(() => {
     let isMounted = true;
@@ -60,34 +60,36 @@ export default function PetProfilePage() {
   return (
     <>
       <Header />
-      <div className="max-w-3xl mx-auto px-6 py-10 text-light-text dark:text-dark-text">
-        <img
-          src={`${photoUrl}/${user.photoPath}`}
-          alt={user.userName}
-          className="w-full h-80 object-cover rounded-xl shadow mb-6"
-        />
-        <h2 className="text-3xl font-bold">{user.userName}</h2>
-        <p className="text-light-secondary-text dark:text-dark-secondary-text mb-2">
-          {user.petType} · {user.age} years old
-        </p>
-        <p className="text-light-secondary-text dark:text-dark-secondary-text mb-4">
-          {user.location}
-        </p>
-        <p className="mb-4">
-          <strong>Preferences:</strong> {user.petPreferences?.join(", ")}
-        </p>
-        {!isHeart && likedId && (
-          <HeartButton
-            otherUserId={likedId}
-            onHeartSuccess={() => setIsHeart(true)}
-          />
-        )}
-        {isHeart && likedId && (
-          <UnHeartButton
-            otherUserId={likedId}
-            onHeartSuccess={() => setIsHeart(false)}
-          />
-        )}
+      <div className="min-h-screen bg-light-background dark:bg-dark-background text-light-text dark:text-dark-text">
+        <div className="max-w-3xl mx-auto px-6 py-10">
+          <div className="bg-white dark:bg-dark-secondary-background rounded-xl shadow-lg p-6">
+            <img
+              src={user.photoPath}
+              alt={user.userName}
+              className="w-full h-80 object-cover rounded-xl shadow mb-6"
+            />
+            <h2 className="text-3xl font-bold text-black ">{user.userName}</h2>
+            <p className="text-light-secondary-text  mb-2">
+              {user.petType} · {user.age} years old
+            </p>
+            <p className="text-light-secondary-text  mb-4">{user.location}</p>
+            <p className="mb-4 text-black">
+              <strong>Preferences:</strong> {user.petPreferences?.join(", ")}
+            </p>
+            {!isHeart && likedId && (
+              <HeartButton
+                otherUserId={likedId}
+                onHeartSuccess={() => setIsHeart(true)}
+              />
+            )}
+            {isHeart && likedId && (
+              <UnHeartButton
+                otherUserId={likedId}
+                onHeartSuccess={() => setIsHeart(false)}
+              />
+            )}
+          </div>
+        </div>
       </div>
       <Footer />
     </>

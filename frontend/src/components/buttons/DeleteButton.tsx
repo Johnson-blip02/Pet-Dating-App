@@ -13,7 +13,7 @@ export default function DeleteButton({
 }: DeleteButtonProps) {
   const navigate = useNavigate();
   const dispatch = useDispatch(); // Initialize dispatch to trigger actions
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const handleDelete = async () => {
     const confirm = window.confirm(

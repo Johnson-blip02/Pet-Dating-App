@@ -70,8 +70,8 @@ describe("SwipePage", () => {
     // Wait for pet to render
     expect(await screen.findByText(/MockPetCard - Buddy/)).toBeInTheDocument();
 
-    // Click skip
-    fireEvent.click(screen.getByText("Skip"));
+    // Click Next
+    fireEvent.click(screen.getByText("Next"));
 
     // It should show no more pets after skipping the only one
     await waitFor(() => {

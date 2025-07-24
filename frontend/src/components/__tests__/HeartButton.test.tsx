@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import HeartButton from "../buttons/HeartButton";
+import HeartButton from "../../components/buttons/HeartButton";
 import { Provider } from "react-redux";
 import { configureStore } from "@reduxjs/toolkit";
 import likeReducer from "../../slices/likeSlice";
@@ -8,6 +8,7 @@ import * as cookies from "../../utils/cookies";
 import { vi, describe, test, expect, beforeEach } from "vitest";
 import type { JSX } from "react";
 
+// Mock getCookie
 vi.mock("../../utils/cookies", () => ({
   getCookie: vi.fn(),
 }));
@@ -21,6 +22,7 @@ function renderWithStore(component: JSX.Element) {
 
 describe("HeartButton", () => {
   const mockGetCookie = vi.mocked(cookies.getCookie);
+  const apiUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
 
   beforeEach(() => {
     vi.clearAllMocks();
@@ -67,10 +69,8 @@ describe("HeartButton", () => {
 
     await waitFor(() => {
       expect(globalThis.fetch).toHaveBeenCalledWith(
-        "http://localhost:5074/api/users/pet123/like/user456",
-        {
-          method: "PUT",
-        }
+        `${apiUrl}/api/users/pet123/like/user456`,
+        { method: "PUT" }
       );
 
       expect(window.alert).toHaveBeenCalledWith("🎉 It's a match!");

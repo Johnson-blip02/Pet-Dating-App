@@ -1,69 +1,65 @@
+using backend.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class ImageController(IWebHostEnvironment env) : ControllerBase
+    public class ImageController : ControllerBase
     {
-        private readonly IWebHostEnvironment _env = env;
+        private readonly CloudinaryService _cloudinaryService;
+
+        public ImageController(CloudinaryService cloudinaryService)
+        {
+            _cloudinaryService = cloudinaryService;
+        }
 
         #region PostMethods
         [HttpPost("upload")]
-        public async Task<IActionResult> Upload(IFormFile file)
+        public async Task<IActionResult> Upload([FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
-            // Create unique file name
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{extension}";
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
 
-            var savePath = Path.Combine(_env.WebRootPath, "images", fileName);
+            if (imageUrl == null)
+                return StatusCode(500, "Upload failed.");
 
-            // Ensure images directory exists
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath)!);
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            // Return relative path to store in MongoDB
-            return Ok(new { path = $"images/{fileName}" });
+            return Ok(new { path = imageUrl }); // Return full Cloudinary URL
         }
         #endregion
-        
+
         #region PutMethods
         [HttpPut("update")]
-        public async Task<IActionResult> Update(IFormFile file, [FromQuery] string? oldPath)
+        public async Task<IActionResult> Update([FromForm] IFormFile file, [FromQuery] string? oldPath)
         {
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded.");
 
-            // Delete old file if provided
+            // Optional: delete previous Cloudinary image if available
             if (!string.IsNullOrEmpty(oldPath))
             {
-                var fullOldPath = Path.Combine(_env.WebRootPath, oldPath);
-                if (System.IO.File.Exists(fullOldPath))
+                try
                 {
-                    System.IO.File.Delete(fullOldPath);
+                    var uri = new Uri(oldPath);
+                    var filename = Path.GetFileNameWithoutExtension(uri.LocalPath); // get "abc123" from the path
+                    var folder = Path.GetDirectoryName(uri.LocalPath)?.TrimStart('/');
+                    var publicId = string.IsNullOrEmpty(folder) ? filename : $"{folder}/{filename}";
+
+                    await _cloudinaryService.DeleteImageAsync(publicId);
+                }
+                catch
+                {
+                    // Silent catch – if URL was malformed or not deletable, continue
                 }
             }
 
-            // Save new file
-            var extension = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{extension}";
-            var savePath = Path.Combine(_env.WebRootPath, "images", fileName);
+            var imageUrl = await _cloudinaryService.UploadImageAsync(file);
+            if (imageUrl == null)
+                return StatusCode(500, "Upload failed.");
 
-            Directory.CreateDirectory(Path.GetDirectoryName(savePath)!);
-
-            using (var stream = new FileStream(savePath, FileMode.Create))
-            {
-                await file.CopyToAsync(stream);
-            }
-
-            return Ok(new { path = $"images/{fileName}" });
+            return Ok(new { path = imageUrl });
         }
         #endregion
     }

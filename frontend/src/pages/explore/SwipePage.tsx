@@ -3,20 +3,25 @@ import PetCard from "../../components/cards/PetCard";
 import Header from "../../components/layout/Header";
 import Footer from "../../components/layout/Footer";
 import { useNavigate } from "react-router-dom";
+import { getCookie } from "../../utils/cookies";
 
 export default function SwipePage() {
   const [currentUser, setCurrentUser] = useState<any | null>(null);
   const [candidates, setCandidates] = useState<any[]>([]);
   const [userLikes, setUserLikes] = useState<string[]>([]);
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const accountId = localStorage.getItem("accountId");
   const petProfileId = localStorage.getItem("petProfileId");
+  const currentAccountId = getCookie("accountId");
+  const currentPetProfileId = getCookie("petProfileId");
 
   // Fetch user’s own profile to get their likedUserIds
   const fetchUserLikes = async () => {
-    const res = await fetch(`${apiUrl}/users/${petProfileId}`);
+    const res = await fetch(
+      `${apiUrl}/users/${petProfileId || currentPetProfileId}`
+    );
     if (!res.ok) throw new Error("Failed to fetch own profile");
     const user = await res.json();
     setUserLikes(user.likedUserIds || []);
@@ -58,8 +63,10 @@ export default function SwipePage() {
 
   useEffect(() => {
     if (!accountId || !petProfileId) {
-      navigate("/");
-      return;
+      if (!currentAccountId || !currentPetProfileId) {
+        navigate("/");
+        return;
+      }
     }
 
     fetchUserLikes().then(initializeCandidates);
@@ -83,7 +90,7 @@ export default function SwipePage() {
                 onClick={handleSkip}
                 className="bg-gray-300 hover:bg-gray-400 text-black font-semibold py-2 px-4 rounded"
               >
-                Skip
+                Next
               </button>
             </div>
           </>

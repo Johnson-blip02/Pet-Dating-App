@@ -1,6 +1,6 @@
 /// <reference types="vitest" />
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
-import Header from "../layout/Header";
+import Header from "../../components/layout/Header";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { MemoryRouter, useNavigate } from "react-router-dom";
 import * as reduxHooks from "react-redux";

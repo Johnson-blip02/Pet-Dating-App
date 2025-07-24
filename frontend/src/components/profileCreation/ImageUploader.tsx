@@ -4,6 +4,7 @@ type Props = {
 };
 
 export default function ImageUploader({ onUpload, previewUrl }: Props) {
+  // const photoUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
   return (
     <div>
       <label
@@ -22,7 +23,7 @@ export default function ImageUploader({ onUpload, previewUrl }: Props) {
       />
       {previewUrl && (
         <img
-          src={`http://localhost:5074/${previewUrl}`}
+          src={`${previewUrl}`}
           alt="Pet"
           className="w-24 h-24 rounded-full object-cover mt-3 shadow-md"
         />
