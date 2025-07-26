@@ -48,11 +48,12 @@ To run both frontend and backend locally:
 ```bash
 docker compose build
 docker compose up -d
+```
 
-| Feature                                          | Status                                                |
-| ------------------------------------------------ | ----------------------------------------------------- |
-| 🧪 Unit testing components                       | ✅ Implemented with Vitest / React Testing Library     |
-| 🧠 Use a state management library (e.g., Redux)  | ✅ Redux Toolkit used for global state                 |
-| 🌗 Support for theme switching (light/dark mode) | ✅ Light/Dark mode implemented with Tailwind CSS       |
-| 🐳 Dockerize your project using Docker           | ✅ Frontend and backend Dockerized with Docker Compose |
-| 🔌 Implement WebSockets for real-time features   | ✅ WebSocket chat system for matched users             |
+## ✅ Checklist
+
+- Unit testing components
+- Use a state management library (e.g., Redux)
+- Support for theme switching (light/dark mode)
+- Dockerize your project using Docker
+- Implement WebSockets for real-time features
