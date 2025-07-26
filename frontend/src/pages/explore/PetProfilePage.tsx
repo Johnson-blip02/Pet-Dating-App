@@ -66,7 +66,7 @@ export default function PetProfilePage() {
             <img
               src={user.photoPath}
               alt={user.userName}
-              className="w-full h-80 object-cover rounded-xl shadow mb-6"
+              className="w-full h-80 object-contain rounded-xl shadow mb-6"
             />
             <h2 className="text-3xl font-bold text-black ">{user.userName}</h2>
             <p className="text-light-secondary-text  mb-2">

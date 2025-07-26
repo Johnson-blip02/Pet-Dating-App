@@ -35,6 +35,7 @@ export default function ProfileCreationPage() {
   const [error, setError] = useState<string>("");
   const [successMessage, setSuccessMessage] = useState<string>("");
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isImageUploading, setIsImageUploading] = useState<boolean>(false);
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
@@ -73,6 +74,8 @@ export default function ProfileCreationPage() {
     const formData = new FormData();
     formData.append("file", file);
 
+    setIsImageUploading(true); // Start uploading
+
     try {
       const res = await fetch(`${apiUrl}/imageupload/upload`, {
         method: "POST",
@@ -82,10 +85,12 @@ export default function ProfileCreationPage() {
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
-      setForm((prev) => ({ ...prev, photoPath: data.url })); // ✅ save full URL
+      setForm((prev) => ({ ...prev, photoPath: data.url }));
     } catch (error) {
       console.error("Image upload failed:", error);
       setError("Image upload failed");
+    } finally {
+      setIsImageUploading(false); // Done uploading
     }
   };
 
@@ -208,7 +213,7 @@ export default function ProfileCreationPage() {
           <button
             type="submit"
             className="w-full bg-yellow-400 dark:bg-yellow-500 text-black dark:text-black py-2 rounded hover:bg-yellow-500 dark:hover:bg-yellow-600 transition disabled:opacity-50"
-            disabled={isProcessing}
+            disabled={isProcessing || isImageUploading}
           >
             {isProcessing ? "Creating Profile..." : "Submit"}
           </button>
