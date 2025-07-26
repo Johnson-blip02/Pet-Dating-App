@@ -52,7 +52,7 @@ docker compose up -d
 
 ## ✅ Checklist
 
-- Unit testing components
+- Unit testing components (In the components folder)
 - Use a state management library (e.g., Redux)
 - Support for theme switching (light/dark mode)
 - Dockerize your project using Docker
