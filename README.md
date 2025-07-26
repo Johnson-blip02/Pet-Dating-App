@@ -63,7 +63,7 @@ npm install
 npm run dev
 ```
 
-## ✅ Checklist
+## ✅ Advanced Checklist
 
 - Unit testing components (In the components folder)
 - Use a state management library (e.g., Redux)
