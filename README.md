@@ -50,6 +50,19 @@ docker compose build
 docker compose up -d
 ```
 
+## 🔌 Local Setup
+
+To run both frontend and backend locally without Docker:
+
+```bash
+cd backend
+dotnet run
+
+cd frontend
+npm install
+npm run dev
+```
+
 ## ✅ Checklist
 
 - Unit testing components (In the components folder)
