@@ -82,11 +82,3 @@ admin123
 ```bash
 mongodb+srv://johnsonr17p:W7zKTV56qM3DzFmy@cluster0.kwpwjgs.mongodb.net/
 ```
-
-## Cloudinary Keys
-
-```bash
-CLOUDINARY_CLOUD_NAME=dkypcdhrd
-CLOUDINARY_API_KEY=886257276219371
-CLOUDINARY_API_SECRET=Fulo_1rrGb_v8X3k1iOQOhWrcxM
-```
