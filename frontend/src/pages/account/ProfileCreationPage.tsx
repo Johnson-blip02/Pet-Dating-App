@@ -85,12 +85,21 @@ export default function ProfileCreationPage() {
       if (!res.ok) throw new Error("Upload failed");
 
       const data = await res.json();
-      setForm((prev) => ({ ...prev, photoPath: data.url }));
+
+      const img = new Image();
+      img.onload = () => {
+        setForm((prev) => ({ ...prev, photoPath: data.url }));
+        setIsImageUploading(false); // ✅ Only set to false after preview is ready
+      };
+      img.onerror = () => {
+        setError("Image uploaded but failed to load preview");
+        setIsImageUploading(false);
+      };
+      img.src = data.url;
     } catch (error) {
       console.error("Image upload failed:", error);
       setError("Image upload failed");
-    } finally {
-      setIsImageUploading(false); // Done uploading
+      setIsImageUploading(false);
     }
   };
 
