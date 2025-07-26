@@ -4,6 +4,6 @@ A full-stack web application where users can create pet profiles, like other pet
 Deployed using Vercel (frontend) and Render (backend)
 
 Frontend: https://your-frontend.vercel.app
-Backend: https://your-backend.onrender.com
+Backend: https://your-backend.onrender.com/run (Ensure this is running)
 
 
