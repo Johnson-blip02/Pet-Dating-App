@@ -70,3 +70,15 @@ npm run dev
 - Support for theme switching (light/dark mode)
 - Dockerize your project using Docker
 - Implement WebSockets for real-time features
+
+## 🔒 Admin Sign in
+
+```bash
+admin@petmatch.com
+admin123
+```
+## MongoDB Connection String (If you need)
+
+```bash
+mongodb+srv://johnsonr17p:W7zKTV56qM3DzFmy@cluster0.kwpwjgs.mongodb.net/
+```
