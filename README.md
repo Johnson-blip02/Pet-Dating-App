@@ -77,8 +77,3 @@ npm run dev
 admin@petmatch.com
 admin123
 ```
-## MongoDB Connection String (If you need)
-
-```bash
-mongodb+srv://johnsonr17p:W7zKTV56qM3DzFmy@cluster0.kwpwjgs.mongodb.net/
-```
