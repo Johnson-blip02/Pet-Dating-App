@@ -52,7 +52,7 @@ export default function ChatMessages({
             className={`max-w-[75%] p-2 rounded-lg ${
               msg.senderId === petProfileId
                 ? "bg-light-accent text-light-text self-end ml-auto dark:bg-dark-accent dark:text-dark-text"
-                : "bg-light-secondary-text text-light-text self-start mr-auto dark:bg-dark-background dark:text-dark-text"
+                : "bg-light-secondary-text text-light-text self-start mr-auto dark:bg-dark-secondary-text dark:text-dark-text"
             }`}
           >
             <p className="text-sm">{msg.message}</p>

@@ -11,39 +11,37 @@ export default function AdminPage() {
   const navigate = useNavigate();
   const accountId = getCookie("accountId");
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
-  // const photoUrl = import.meta.env.VITE_PHOTO_URL || "http://localhost:5074";
 
+  // Reusable fetch function to update list after deletion
+  const fetchUsers = async () => {
+    try {
+      const resAccount = await fetch(`${apiUrl}/accounts/${accountId}`);
+      const account = await resAccount.json();
+
+      if (account.role !== "Admin") {
+        navigate("/"); // Redirect if the user is not an admin
+        return;
+      }
+
+      const petProfileId = account.petProfileId;
+
+      const resUsers = await fetch(`${apiUrl}/users/all`);
+      const allUsers = await resUsers.json();
+
+      const filtered = allUsers.filter((u: any) => u.id !== petProfileId);
+      setUsers(filtered);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      navigate("/");
+    }
+  };
+
+  // Run once on mount
   useEffect(() => {
     if (!accountId) {
       navigate("/");
       return;
     }
-
-    const fetchUsers = async () => {
-      try {
-        // Get current account details
-        const resAccount = await fetch(`${apiUrl}/accounts/${accountId}`);
-        const account = await resAccount.json();
-
-        if (account.role !== "Admin") {
-          navigate("/"); // Redirect if the user is not an admin
-          return;
-        }
-
-        const petProfileId = account.petProfileId;
-
-        // Fetch all users
-        const resUsers = await fetch(`${apiUrl}/users/all`);
-        const allUsers = await resUsers.json();
-
-        // Filter out the current user's pet profile
-        const filtered = allUsers.filter((u: any) => u.id !== petProfileId);
-        setUsers(filtered);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        navigate("/"); // Redirect on error
-      }
-    };
 
     fetchUsers();
   }, [accountId, navigate]);
@@ -99,7 +97,10 @@ export default function AdminPage() {
                   <td className="p-2 border border-gray-300 dark:border-gray-600 w-40 whitespace-nowrap">
                     <div className="flex gap-2 justify-center">
                       <UpdateButton petProfileId={user.id} />
-                      <AdminDeleteButton userId={user.id} />
+                      <AdminDeleteButton
+                        userId={user.id}
+                        onDeleteSuccess={fetchUsers}
+                      />
                     </div>
                   </td>
                 </tr>

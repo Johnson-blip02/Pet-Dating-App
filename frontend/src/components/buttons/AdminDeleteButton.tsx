@@ -1,15 +1,14 @@
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 interface AdminDeleteButtonProps {
-  userId: string; // Receive the userId from the AdminPage
-  onDeleteSuccess?: () => void; // Optional callback to handle success
+  userId: string;
+  onDeleteSuccess?: () => void;
 }
 
 export default function AdminDeleteButton({
   userId,
   onDeleteSuccess,
 }: AdminDeleteButtonProps) {
-  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:5074/api";
 
   const handleDelete = async () => {
@@ -22,9 +21,7 @@ export default function AdminDeleteButton({
     if (!confirm) return;
 
     try {
-      // First, fetch the accountId associated with the userId
       const accountRes = await fetch(`${apiUrl}/accounts/user/${userId}`);
-
       if (!accountRes.ok) {
         const errorData = await accountRes.json();
         alert(
@@ -32,23 +29,16 @@ export default function AdminDeleteButton({
             errorData.message || accountRes.statusText
           }`
         );
-        console.error(
-          `Failed to fetch account details. Status: ${accountRes.status}`
-        );
-        console.error("Error Data:", errorData);
         return;
       }
 
       const accountData = await accountRes.json();
-
-      if (!accountData || !accountData.id) {
-        alert("Failed to fetch account details.");
+      const accountId = accountData.id;
+      if (!accountId) {
+        alert("Invalid account data returned.");
         return;
       }
 
-      const accountId = accountData.id;
-
-      // Proceed with the delete operation
       const res = await fetch(`${apiUrl}/accounts/${accountId}`, {
         method: "DELETE",
         headers: {
@@ -57,18 +47,12 @@ export default function AdminDeleteButton({
       });
 
       if (res.ok) {
-        // Optional callback
         if (onDeleteSuccess) onDeleteSuccess();
-
-        // Redirect to the home page after deletion
-        navigate("/admin", { state: { accountDeleted: true } });
       } else {
         const errorData = await res.json().catch(() => ({}));
         alert(
           `Failed to delete account: ${errorData.message || res.statusText}`
         );
-        console.error(`Failed to delete account. Status: ${res.status}`);
-        console.error("Error Data:", errorData);
       }
     } catch (err) {
       console.error("Delete error:", err);
