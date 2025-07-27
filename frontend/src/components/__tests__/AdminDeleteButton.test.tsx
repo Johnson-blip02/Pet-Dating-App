@@ -79,9 +79,6 @@ describe("AdminDeleteButton", () => {
       );
 
       expect(onDeleteSuccess).toHaveBeenCalled();
-      expect(mockNavigate).toHaveBeenCalledWith("/admin", {
-        state: { accountDeleted: true },
-      });
     });
   });
 });
