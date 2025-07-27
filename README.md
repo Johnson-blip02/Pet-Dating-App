@@ -17,7 +17,7 @@ Our project reimagines **networking through the lens of pets**, blending social 
 ## ✨ Highlight Features
 
 - 🐶 **Pet-First Social Networking**  
-  Users create pet profiles including name, type, age, location, preferences, and photos — making networking lighthearted yet functional.
+  Users can create pet profiles including name, type, age, location, preferences, and photos.
 
 - 📸 **Cloudinary Image Upload**  
   Profile photos are uploaded to the cloud with real-time preview and backend validation.
@@ -27,6 +27,15 @@ Our project reimagines **networking through the lens of pets**, blending social 
 
 - 🔍 **Explore Page with Dynamic Filtering**
   Users can browse and discover other pet profiles through the Explore page, enhanced with intuitive filtering by pet type (e.g., Dog or Cat) and search by name. This allows users to         narrow down results and find connections based on their pet's preferences or interests. The filtering logic is handled on the client side for fast, responsive interaction
+
+- 👆 **Swipe Page for Quick Decisions**
+  A swipe-style interface lets users quickly like or skip other pet profiles in a familiar Tinder-like experience
+
+- 🧑‍💼 **User Dashboard with Account Management**
+  Users have access to a personal dashboard where they can view, update, or permanently delete their account and pet profile, giving them full control over their data on the platform.
+
+- 🍪 **Persistent Login with Cookies**
+  The app uses cookies to remember users across sessions, ensuring they stay logged in even after refreshing or closing the tab — creating a smooth, uninterrupted experience.
 
 - ❤️ **Like & Match System**  
   Pets can "like" other profiles, and chat is unlocked only when both sides have liked each other.
