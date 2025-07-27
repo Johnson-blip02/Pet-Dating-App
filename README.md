@@ -23,6 +23,9 @@ Our project reimagines **networking through the lens of pets**, blending social 
 - 💬 **Real-Time Chat with WebSockets**  
   Matched pets can start chatting instantly through a WebSocket-powered chat system.
 
+- 🔍 Explore Page with Dynamic Filtering
+  Users can browse and discover other pet profiles through the Explore page, enhanced with intuitive filtering by pet type (e.g., Dog or Cat) and search by name. This allows users to         narrow down results and find connections based on their pet's preferences or interests. The filtering logic is handled on the client side for fast, responsive interaction
+
 - ❤️ **Like & Match System**  
   Pets can "like" other profiles, and chat is unlocked only when both sides have liked each other.
 
